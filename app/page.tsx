@@ -17,7 +17,6 @@ import Location from '@/components/location/Location';
 import Footer from '@/components/footer/Footer';
 import s from './HomePage.module.css'; 
 
-// Skeleton optimizado solo para las zonas que realmente esperan datos asíncronos
 function SectionSkeleton() {
   return (
     <div className={s.skeletonSectionWrapper} aria-hidden="true">
@@ -31,17 +30,16 @@ export default function Home() {
   const router = useRouter();
   const { user, loading } = useAuth();
 
-  // Guardián e Interceptor: Redirige solo si el hash contiene un token de acceso activo
   useEffect(() => {
     if (typeof window !== 'undefined' && window.location.hash) {
       const hash = window.location.hash;
-      const tieneToken = hash.includes('access_token');
-      const esFlujoPassword = 
-        hash.includes('type=invite') || 
-        hash.includes('type=recovery') || 
-        hash.includes('type=signup');
-
-      if (tieneToken && esFlujoPassword) {
+      
+      // Solo interceptar si contiene la firma de recuperación/invitación explícita
+      if (
+        hash.includes('access_token') &&
+        (hash.includes('type=invite') || hash.includes('type=recovery') || hash.includes('type=signup'))
+      ) {
+        // Redirigir limpiamente sin duplicar el hash en la URL destino
         router.replace(`/actualizar-password${hash}`);
       }
     }
@@ -52,12 +50,10 @@ export default function Home() {
       <Navbar />
       <main className={s.homeWrapper}>
         <div className={s.contentContainer}>
-          {/* Componentes estáticos estructurales */}
           <Hero />
           <Features /> 
           <HistoryTimeline /> 
 
-          {/* Componentes asíncronos dinámicos */}
           <Suspense fallback={<SectionSkeleton />}>
             <Speakers />
           </Suspense>
@@ -68,7 +64,6 @@ export default function Home() {
 
           <Streaming />
 
-          {/* Desvanecimiento y remoción inteligente de la sección Access */}
           <AnimatePresence mode="wait">
             {!loading && !user && (
               <motion.div
