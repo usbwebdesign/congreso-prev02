@@ -30,7 +30,7 @@ function ActualizarPasswordContent() {
   useEffect(() => {
     let isMounted = true;
 
-    // Escuchar eventos de autenticación
+    // 1. Escuchar eventos de cambio de estado de sesión
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
@@ -40,6 +40,7 @@ function ActualizarPasswordContent() {
         session ||
         event === 'PASSWORD_RECOVERY' ||
         event === 'SIGNED_IN' ||
+        event === 'INITIAL_SESSION' ||
         event === 'USER_UPDATED'
       ) {
         setSessionValida(true);
@@ -47,54 +48,58 @@ function ActualizarPasswordContent() {
       }
     });
 
+    // 2. Inicialización explícita y extracción de tokens del Hash o Query params
     async function inicializarSesionCompleta() {
       if (typeof window === 'undefined') return;
 
-      // 1. Extraer parámetros del hash (#access_token=...&refresh_token=...)
-      if (window.location.hash) {
-        const hashParams = new URLSearchParams(window.location.hash.substring(1));
-        const accessToken = hashParams.get('access_token');
-        const refreshToken = hashParams.get('refresh_token');
+      try {
+        // A) Extraer parámetros del hash (#access_token=...&refresh_token=...)
+        if (window.location.hash) {
+          const hashParams = new URLSearchParams(window.location.hash.substring(1));
+          const accessToken = hashParams.get('access_token');
+          const refreshToken = hashParams.get('refresh_token');
 
-        if (accessToken && refreshToken) {
-          const { error } = await supabase.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken,
-          });
+          if (accessToken && refreshToken) {
+            const { error } = await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            });
 
+            if (!error && isMounted) {
+              setSessionValida(true);
+              setCargandoSesion(false);
+              return;
+            }
+          }
+        }
+
+        // B) Verificar si hay un código PKCE en SearchParams (?code=...)
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+
+        if (code) {
+          const { error } = await supabase.auth.exchangeCodeForSession(code);
           if (!error && isMounted) {
             setSessionValida(true);
             setCargandoSesion(false);
             return;
           }
         }
-      }
 
-      // 2. Verificar si hay un código PKCE en los SearchParams (?code=...)
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get('code');
-
-      if (code) {
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
-        if (!error && isMounted) {
+        // C) Comprobar si ya existe una sesión activa recuperada por cookies o localStorage
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session && isMounted) {
           setSessionValida(true);
           setCargandoSesion(false);
           return;
         }
+      } catch (err) {
+        console.error('Error al verificar sesión de recuperación:', err);
+      } finally {
+        if (isMounted) {
+          setCargandoSesion(false);
+        }
       }
-
-      // 3. Comprobar si ya existe una sesión activa
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session && isMounted) {
-        setSessionValida(true);
-        setCargandoSesion(false);
-        return;
-      }
-
-      // Fallback
-      setTimeout(() => {
-        if (isMounted) setCargandoSesion(false);
-      }, 1000);
     }
 
     inicializarSesionCompleta();

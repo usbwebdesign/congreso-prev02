@@ -1,8 +1,9 @@
-'use client'; //  Necesario para escuchar el estado de la sesión en tiempo real
+'use client'; // Necesario para escuchar el estado de la sesión en tiempo real
 
-import { Suspense } from 'react';
+import { useEffect, Suspense } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '@/hooks/useAuth'; // 👈 Asegúrate de apuntar a tu hook de sesión
+import { useAuth } from '@/hooks/useAuth';
 
 import Navbar from '@/components/navbar/Navbar';
 import Hero from '@/components/hero/Hero';
@@ -27,19 +28,34 @@ function SectionSkeleton() {
 }
 
 export default function Home() {
-  const { user, loading } = useAuth(); //  Obtenemos el usuario de Supabase
+  const router = useRouter();
+  const { user, loading } = useAuth();
+
+  // Guardián e Interceptor: Si el usuario entra por un enlace de invitación o recuperación
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const hash = window.location.hash;
+      if (
+        hash.includes('type=invite') ||
+        hash.includes('type=recovery') ||
+        hash.includes('type=signup')
+      ) {
+        router.replace(`/actualizar-password${hash}`);
+      }
+    }
+  }, [router]);
 
   return (
     <>
       <Navbar />
       <main className={s.homeWrapper}>
         <div className={s.contentContainer}>
-          {/* Componentes estáticos estructurales: Renderizan de inmediato sin bloquear la página */}
+          {/* Componentes estáticos estructurales */}
           <Hero />
           <Features /> 
           <HistoryTimeline /> 
 
-          {/* Componentes asíncronos dinámicos: Cada uno maneja su propia carga de manera independiente */}
+          {/* Componentes asíncronos dinámicos */}
           <Suspense fallback={<SectionSkeleton />}>
             <Speakers />
           </Suspense>
@@ -50,7 +66,7 @@ export default function Home() {
 
           <Streaming />
 
-          {/* 🔀 Desvanecimiento y remoción inteligente de la sección Access */}
+          {/* Desvanecimiento y remoción inteligente de la sección Access */}
           <AnimatePresence mode="wait">
             {!loading && !user && (
               <motion.div
