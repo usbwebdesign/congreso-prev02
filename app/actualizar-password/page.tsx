@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { Lock, Eye, EyeOff, KeyRound, Check, AlertCircle } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
 import LoginSkeleton from '../login/Skeleton';
 import s from '../login/Login.module.css';
 
-export default function ActualizarPasswordPage() {
+function ActualizarPasswordContent() {
   const router = useRouter();
 
   const [password, setPassword] = useState('');
@@ -20,19 +20,31 @@ export default function ActualizarPasswordPage() {
   // Micro-interacción de éxito visual
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  // Instancia memoizada para evitar crear nuevos clientes de Supabase en cada render
+  const supabase = useMemo(
+    () =>
+      createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      ),
+    []
   );
 
   useEffect(() => {
     let isMounted = true;
 
     // Escuchar eventos de autenticación
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!isMounted) return;
 
-      if (session || event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+      if (
+        session ||
+        event === 'PASSWORD_RECOVERY' ||
+        event === 'SIGNED_IN' ||
+        event === 'USER_UPDATED'
+      ) {
         setSessionValida(true);
         setCargandoSesion(false);
       }
@@ -75,7 +87,9 @@ export default function ActualizarPasswordPage() {
       }
 
       // 3. Comprobar si ya existe una sesión activa persistida
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (session && isMounted) {
         setSessionValida(true);
         setCargandoSesion(false);
@@ -114,12 +128,11 @@ export default function ActualizarPasswordPage() {
 
       setIsSuccess(true);
 
-      // 3. Redirigir al panel o login
+      // 3. Redirigir al panel o inicio
       setTimeout(() => {
         router.push('/');
         router.refresh();
       }, 1500);
-
     } catch (err) {
       if (err instanceof Error) {
         setErrorMsg(err.message);
@@ -217,5 +230,14 @@ export default function ActualizarPasswordPage() {
         </div>
       )}
     </div>
+  );
+}
+
+// Exportación con la frontera de Suspense para SSR en Next.js App Router
+export default function ActualizarPasswordPage() {
+  return (
+    <Suspense fallback={<LoginSkeleton />}>
+      <ActualizarPasswordContent />
+    </Suspense>
   );
 }
