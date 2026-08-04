@@ -16,11 +16,8 @@ function ActualizarPasswordContent() {
   const [cargandoSesion, setCargandoSesion] = useState(true);
   const [sessionValida, setSessionValida] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
-  // Micro-interacción de éxito visual
   const [isSuccess, setIsSuccess] = useState(false);
 
-  // Instancia memoizada para evitar crear nuevos clientes de Supabase en cada render
   const supabase = useMemo(
     () =>
       createBrowserClient(
@@ -36,7 +33,7 @@ function ActualizarPasswordContent() {
     // Escuchar eventos de autenticación
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (!isMounted) return;
 
       if (
@@ -53,20 +50,7 @@ function ActualizarPasswordContent() {
     async function inicializarSesionCompleta() {
       if (typeof window === 'undefined') return;
 
-      // 1. Verificar si hay un código PKCE en los SearchParams (?code=...)
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get('code');
-
-      if (code) {
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
-        if (!error && isMounted) {
-          setSessionValida(true);
-          setCargandoSesion(false);
-          return;
-        }
-      }
-
-      // 2. Extraer parámetros del hash (#access_token=...&refresh_token=...)
+      // 1. Extraer parámetros del hash (#access_token=...&refresh_token=...)
       if (window.location.hash) {
         const hashParams = new URLSearchParams(window.location.hash.substring(1));
         const accessToken = hashParams.get('access_token');
@@ -86,20 +70,31 @@ function ActualizarPasswordContent() {
         }
       }
 
-      // 3. Comprobar si ya existe una sesión activa persistida
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      // 2. Verificar si hay un código PKCE en los SearchParams (?code=...)
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (!error && isMounted) {
+          setSessionValida(true);
+          setCargandoSesion(false);
+          return;
+        }
+      }
+
+      // 3. Comprobar si ya existe una sesión activa
+      const { data: { session } } = await supabase.auth.getSession();
       if (session && isMounted) {
         setSessionValida(true);
         setCargandoSesion(false);
         return;
       }
 
-      // Fallback de seguridad si no hay token ni código válido
+      // Fallback
       setTimeout(() => {
         if (isMounted) setCargandoSesion(false);
-      }, 800);
+      }, 1000);
     }
 
     inicializarSesionCompleta();
@@ -116,19 +111,15 @@ function ActualizarPasswordContent() {
     setSubmitting(true);
 
     try {
-      // 1. Actualizar la contraseña en Supabase Auth
       const { error: updateError } = await supabase.auth.updateUser({
         password: password.trim(),
       });
 
       if (updateError) throw updateError;
 
-      // 2. Refrescar la sesión para consolidar las cookies del usuario
       await supabase.auth.getSession();
-
       setIsSuccess(true);
 
-      // 3. Redirigir al panel o inicio
       setTimeout(() => {
         router.push('/');
         router.refresh();
@@ -156,7 +147,6 @@ function ActualizarPasswordContent() {
       {cargandoSesion ? (
         <LoginSkeleton />
       ) : isSuccess ? (
-        /* ==================== VISTA DE ÉXITO ==================== */
         <div className={s.successWrapper}>
           <div className={s.successCircle}>
             <Check size={28} strokeWidth={3} className={s.checkIcon} />
@@ -165,7 +155,6 @@ function ActualizarPasswordContent() {
           <p className={s.successSubtitle}>Acceso concedido. Redireccionando al inicio...</p>
         </div>
       ) : !sessionValida ? (
-        /* ==================== ENLACE NO VÁLIDO / EXPIRADO ==================== */
         <div className={s.loginContentWrapper} style={{ textAlign: 'center' }}>
           <div className={s.brandHeader} style={{ alignItems: 'center' }}>
             <div className={s.brandLogoWrapper}>
@@ -184,7 +173,6 @@ function ActualizarPasswordContent() {
           </button>
         </div>
       ) : (
-        /* ==================== FORMULARIO DIRECTO ==================== */
         <div className={s.loginContentWrapper}>
           <div className={s.brandHeader}>
             <div className={s.brandLogoWrapper}>
@@ -233,7 +221,6 @@ function ActualizarPasswordContent() {
   );
 }
 
-// Exportación con la frontera de Suspense para SSR en Next.js App Router
 export default function ActualizarPasswordPage() {
   return (
     <Suspense fallback={<LoginSkeleton />}>
