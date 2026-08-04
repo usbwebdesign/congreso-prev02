@@ -1,0 +1,25 @@
+.pageWrapper {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #000000; /* Fondo base negro puro */
+  position: relative;
+  overflow-x: hidden;
+  
+  /* Gradiente parcial e inteligente en la mitad inferior de la página */
+  background-image: 
+    linear-gradient(
+      to top,
+      #000000 0%,               /* 0% a 5%: Negro absoluto para que el Footer ensamble limpio */
+      rgba(37, 99, 235, 0.08) 25%, /* Emerge un azul muy sutil que se eleva hacia el directorio */
+      rgba(37, 99, 235, 0.02) 60%, /* Se va difuminando suavemente en el centro del contenido */
+      transparent 90%           /* La parte superior regresa al negro puro de la Navbar */
+    );
+}
+
+/* Mantiene el flujo limpio para el contenedor del directorio */
+.contentContainer {
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}

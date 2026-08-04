@@ -1,0 +1,588 @@
+.sectionContainer {
+  color: #ffffff;
+  padding: 100px 4% 120px 4%;
+  max-width: 840px; /* Contenedor más angosto para emular el formato de lista centrado */
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sectionTitle {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  text-align: center;
+  margin: 0 0 40px 0;
+}
+
+/* --- TABS SELECTORAS DE DÍA (LOOK APPLE) --- */
+.tabContainer {
+  display: flex;
+  background-color: #121212;
+  padding: 4px;
+  border-radius: 12px;
+  max-width: 220px;
+  margin: 0 0 48px 0;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tabButton {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #a3a3a3;
+  padding: 10px 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.tabActive {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+/* --- ESTRUCTURA DE LA FILA --- */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.rowInteractive {
+  cursor: pointer;
+}
+
+/* --- BLOQUES DE ICONOS (IZQUIERDA) --- */
+.iconBlock {
+  width: 64px;
+  min-width: 64px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.bgWelcome {
+  background-color: #2b2b30; /* Gris industrial premium */
+}
+.bgClosing {
+  background-color: #2b2b30; /* Gris industrial premium */
+}
+
+.bgBreak {
+  background-color: #f59e0b; /* Naranja/Ambar para el desayuno */
+}
+
+.bgCatering {
+  background-color: #f59e0b; /* Naranja/Ambar para el desayuno */
+}
+.bgConference {
+  background-color: #3b82f6; /* Azul vibrante de conferencias standard */
+}
+
+/* Duplicamos el color si es la segunda conferencia o puedes variarlo */
+.row:nth-of-type(4) .bgConference {
+  background-color: #8b5cf6; /* Púrpura premium para diferenciar slots */
+}
+
+/* --- TARJETAS DE INFORMACIÓN (DERECHA) --- */
+.infoCard {
+  flex: 1;
+  background-color: #1c1c1e; /* Color oscuro bento */
+  border-radius: 16px;
+  padding: 24px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.infoCardConference {
+  /* Gradiente ultra sutil para simular el look traslúcido de las conferencias */
+  background: linear-gradient(135deg, #1c1c1e 0%, #151517 100%);
+}
+
+.rowInteractive:hover .infoCard {
+  background-color: #242426;
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(4px); /* Sutil empuje horizontal al hacer hover */
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.eventTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+}
+
+.eventTime {
+  font-size: 0.9rem;
+  color: #8e8e93;
+  margin: 0;
+}
+
+.detailsBtn {
+  background: transparent;
+  border: none;
+  color: #a3a3a3;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.rowInteractive:hover .detailsBtn {
+  color: #ffffff;
+}
+
+.speakerTag {
+  margin: 14px 0 0 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #e5e5e5;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 12px;
+}
+
+.roleSub {
+  color: #8e8e93;
+  font-weight: 400;
+}
+
+/* --- INTERFAZ MODAL DETALLES --- */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modalContent {
+  background-color: #121212;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 24px;
+  padding: 36px 32px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+  animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.closeButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  color: #a3a3a3;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.modalHeader {
+  margin-bottom: 24px;
+}
+
+.modalLabel {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #3b82f6;
+  letter-spacing: 0.05em;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 6px 0;
+}
+
+.modalTimeSlot {
+  font-size: 0.9rem;
+  color: #8e8e93;
+  margin: 0;
+}
+
+.modalBody {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 20px;
+}
+
+.modalSpeakerTitle {
+  font-size: 0.85rem;
+  color: #8e8e93;
+  text-transform: uppercase;
+  margin: 0 0 6px 0;
+  letter-spacing: 0.02em;
+}
+
+.modalSpeakerName {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 14px 0;
+}
+
+.modalSpeakerRole {
+  color: #3b82f6;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.modalBioText {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #bfbfbf;
+  margin: 0 0 28px 0;
+}
+
+.modalCloseCta {
+  width: 100%;
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  padding: 14px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.modalCloseCta:hover {
+  opacity: 0.9;
+}
+
+/* --- ANIMACIONES NATIVAS --- */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleUp { from { transform: scale(0.96); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* --- RESPONSIVE MODES --- */
+@media (max-width: 600px) {
+  .sectionContainer { padding: 64px 5% 80px 5%; }
+  .sectionTitle { font-size: 2.2rem; }
+  .row { gap: 12px; }
+  .iconBlock { width: 50px; min-width: 50px; }
+  .infoCard { padding: 18px 20px; }
+  .eventTitle { font-size: 1.1rem; }
+  .detailsBtn { font-size: 0.8rem; }
+  .detailsBtn span { display: none; } /* Oculta texto largo en móviles chicos */
+}
+.facultyFilterContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
+  padding: 0 4px;
+}
+
+.filterLabel {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.facultyChips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chipButton {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px; /* Estilo píldora */
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chipButton:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.chipActive {
+  background: #ffffff !important;
+  color: #0b0f19 !important; /* Contraste invertido */
+  border-color: #ffffff;
+  font-weight: 500;
+}
+
+.facultyTag {
+  display: inline-block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #38bdf8; /* Un azul o color distintivo para indicar pertenencia */
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+.bgActivity {
+  background-color: #0d9488; /* Verde Tequila / Turquesa Premium para diferenciarlo del azul de ponencias */
+}
+/* ==========================================================================
+   Botonera de Expansión Sutil, Minimalista y Responsiva
+   ========================================================================== */
+.expandButtonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem; /* Uso de rem para mantener consistencia con el flujo del layout */
+}
+
+.expandButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: transparent;
+  color: #6b7280; /* Gris sutil en estado pasivo */
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: color 0.25s ease;
+  -webkit-tap-highlight-color: transparent; /* Elimina el flash azul nativo en móviles */
+}
+
+/* Nota: Si tu fondo es oscuro, mantén tu `#d1d2d3`. 
+   Si tu fondo es claro, te sugiero cambiarlo a `#111827` para mejorar el contraste */
+.expandButton:hover {
+  color: #d6d6d6;
+}
+
+.expandBadge {
+  font-size: 11px;
+  font-weight: 400;
+  color: #9ca3af;
+  border: 1px solid rgba(229, 231, 235, 0.8);
+  padding: 1.5px 8px;
+  border-radius: 9999px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.25s ease;
+}
+
+.expandButton:hover .expandBadge {
+  border-color: #cbd5e1;
+  color: #d6d6d6;
+}
+
+.expandIcon {
+  color: #9ca3af;
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.expandButton:hover .expandIcon {
+  color: #d6d6d6;
+  transform: translateY(1.5px); /* Desplazamiento más sutil y elegante */
+}
+
+.collapseButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: transparent;
+  color: #9ca3af;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: color 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.collapseButton:hover {
+  color: #6b7280;
+}
+
+/* Optimización Responsiva para Pantallas Pequeñas (Móviles) */
+@media (max-width: 640px) {
+  .expandButtonContainer {
+    margin-top: 1.5rem;
+  }
+
+  .expandButton, 
+  .collapseButton {
+    font-size: 13px; /* Reducción milimétrica para pantallas compactas */
+    padding: 6px 12px;
+    gap: 6px;
+  }
+
+  .expandBadge {
+    font-size: 10px;
+    padding: 1px 6px;
+  }
+}
+
+/* Estados de Carga y Vacíos */
+.loaderState, .emptyState {
+  text-align: center;
+  padding: 48px;
+  color: #6b7280;
+  font-size: 15px;
+  background-color: #f9fafb;
+  border-radius: 16px;
+  border: 1px dashed #e5e7eb;
+}
+/* ==========================================================================
+   Animaciones de Despliegue Premium
+   ========================================================================== */
+
+/* Contenedor de los elementos que se revelan */
+.revealedContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Animación individual para cada tarjeta nueva */
+.animatedRow {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Staggered delay (retraso escalonado) para que aparezcan una tras otra */
+.animatedRow:nth-child(1) { animation-delay: 0.04s; }
+.animatedRow:nth-child(2) { animation-delay: 0.08s; }
+.animatedRow:nth-child(3) { animation-delay: 0.12s; }
+.animatedRow:nth-child(4) { animation-delay: 0.16s; }
+.animatedRow:nth-child(5) { animation-delay: 0.20s; }
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Suavizado en la rotación del icono del botón */
+.expandIconRotate {
+  transform: rotate(180deg);
+}
+/* ==========================================================================
+   ⚡ SKELETON LOADER PREMIUM (Optimizado para Modo Oscuro)
+   ========================================================================== */
+.skeletonTimeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+/* Base de animación pulsante con gradiente para fondo oscuro */
+.skeletonPulse {
+  /* Fondo base antracita con un destello central traslúcido */
+  background: linear-gradient(
+    90deg, 
+    rgba(31, 41, 55, 0.6) 25%, 
+    rgba(55, 65, 81, 0.7) 50%, 
+    rgba(31, 41, 55, 0.6) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonDarkLoading 1.6s infinite cubic-bezier(0.4, 0, 0.6, 1);
+  border-radius: 6px;
+}
+
+@keyframes skeletonDarkLoading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Réplica del contenedor de iconos en modo oscuro */
+.skeletonIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Réplica de la tarjeta Bento para modo oscuro */
+.skeletonCard {
+  flex-grow: 1;
+  /* Fondo oscuro semi-traslúcido con blur de fondo estilo Apple */
+  background-color: rgba(17, 24, 39, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  
+  /* Borde sutil y elegante de alto contraste */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Líneas de texto simuladas con opacidad adaptada */
+.skeletonTitle {
+  width: 55%;
+  height: 16px;
+  margin-bottom: 2px;
+}
+
+.skeletonTime {
+  width: 20%;
+  height: 12px;
+}
+
+.skeletonSpeaker {
+  width: 35%;
+  height: 12px;
+  margin-top: 6px;
+}

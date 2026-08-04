@@ -1,0 +1,56 @@
+.countdownContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.unitBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 48px;
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.unitBox:last-child {
+  border-right: none; /* Quita la línea al último elemento */
+}
+
+.number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: #71717a; /* Color zinc apagado */
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+/* Responsivo rápido para móviles */
+@media (max-width: 768px) {
+  .unitBox {
+    padding: 0 10px;
+  }
+  .number {
+    font-size: 2.2rem;
+  }
+  .countdownContainer {
+    padding: 0 100px;
+    margin: 0 100px;
+}
+}
+.scrollArrow {
+  position: absolute;
+  bottom: 32px; 
+  animation: bounce 2s infinite;
+  opacity: 0.6;
+  color: #ffffff;
+}

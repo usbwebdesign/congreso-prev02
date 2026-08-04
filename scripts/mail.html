@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invitación al Congreso USB 2026</title>
+  <style>
+    body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; background-color: #f4f6f9; color: #333333; margin: 0; padding: 0; }
+    .container { max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .header { background-color: #0b2545; padding: 30px; text-align: center; color: #ffffff; }
+    .header h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: 0.5px; }
+    .content { padding: 40px 30px; line-height: 1.6; }
+    .content p { margin: 0 0 20px 0; font-size: 16px; }
+    .btn-container { text-align: center; margin: 35px 0; }
+    .btn { background-color: #134074; color: #ffffff !important; padding: 14px 30px; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 5px; display: inline-block; transition: background 0.2s; }
+    .footer { background-color: #f4f6f9; text-align: center; padding: 20px; font-size: 12px; color: #777777; border-top: 1px solid #eef1f6; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Encabezado Institucional -->
+    <div class="header">
+      <h1>V Congreso Multidisciplinario USBMEXICO 2026</h1>
+    </div>
+
+    <!-- Contenido del Mensaje -->
+    <div class="content">
+      <p>Estimado(a) asistente,</p>
+      
+      <p>Nos complace informarte que has sido pre-registrado con éxito en la plataforma oficial del <strong>V Congreso Multidisciplinario USBMEXICO</strong> de la Universidad Simón Bolívar.</p>
+      
+      <p>Para completar tu registro y poder acceder a tus conferencias, talleres y panel de usuario, es necesario que actives tu cuenta creando tu contraseña personal a través del siguiente enlace institucional:</p>
+
+      <!-- Botón con la variable nativa de Supabase -->
+      <div class="btn-container">
+        <a href="{{ .ConfirmationURL }}" class="btn" target="_blank">Confirmar Registro y Crear Contraseña</a>
+      </div>
+
+      <p style="font-size: 14px; color: #666666; font-style: italic;">Nota: Por motivos de seguridad, este enlace es de uso único y tiene una vigencia limitada.</p>
+      
+      <p>¡Te esperamos en el congreso!</p>
+    </div>
+
+    <!-- Pie de página -->
+    <div class="footer">
+      <p>Este es un correo automático generado por el sistema de autenticación de la Universidad Simón Bolívar.<br>Por favor no respondas a este mensaje.</p>
+    </div>
+  </div>
+
+</body>
+</html>

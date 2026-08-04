@@ -1,0 +1,553 @@
+/* ==========================================================================
+   ESTRUCTURA BASE DEL HEADER & CONTENEDOR (ISLA FLOTANTE MINIMALISTA)
+   ========================================================================== */
+.header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.navContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  max-width: 1600px;
+  height: 64px;
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(11, 11, 11, 0.75);
+  backdrop-filter: blur(12px); 
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0 30px;
+  border-radius: 50px;
+  z-index: 100;
+}
+
+.logoSection {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+
+.menuLinks {
+  display: flex;
+  list-style: none;
+  gap: 3.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.link {
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: #ffffff;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   ESTADOS POR DEFECTO (BOTONES PARA USUARIOS NO AUTENTICADOS)
+   ========================================================================== */
+.btnAdmisiones {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #0f62fe; /* Azul IBM Unificado */
+  color: #ffffff;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0.6rem 1.6rem;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  font-family: 'Sora', sans-serif;
+  box-shadow: 0 4px 15px rgba(15, 98, 254, 0.2);
+}
+
+.btnAdmisiones:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(15, 98, 254, 0.3);
+}
+
+.btnInscripcionIconMobile {
+  display: none; /* Oculto en desktop por defecto */
+}
+
+.btnLoginPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.6rem 1.2rem;
+  border-radius: 30px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  font-family: 'Sora', sans-serif;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btnLoginPill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   ARQUITECTURA DE USUARIO AUTENTICADO (DESKTOP)
+   ========================================================================== */
+.userDropdownContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.userProfileTrigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.55rem 1.2rem;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.userProfileTrigger:hover,
+.triggerActive {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.avatarIcon {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.userEmailText {
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chevronIcon {
+  color: rgba(255, 255, 255, 0.4);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chevronRotate {
+  transform: rotate(180deg);
+  color: #ffffff;
+}
+
+/* MENÚ INTERNO FLOTANTE DESKTOP */
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 240px;
+  background: rgba(18, 19, 24, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+  padding: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  animation: dropdownFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  z-index: 1010;
+}
+
+@keyframes dropdownFadeIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.dropdownHeader {
+  padding: 0.6rem 0.8rem;
+}
+
+.dropdownLabel {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 1px;
+  margin: 0 0 4px 0;
+}
+
+.dropdownUserEmail {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  word-break: break-all;
+  margin: 0;
+}
+
+.dropdownDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.05);
+  margin: 0.4rem 0;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.dropdownItemLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.itemIcon {
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 0.15s ease;
+}
+
+.dropdownItem:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+}
+
+.dropdownItem:hover .itemIcon {
+  color: #ffffff;
+}
+
+.logoutItem:hover {
+  background: rgba(239, 68, 68, 0.08);
+  color: #f87171;
+}
+
+.logoutItem:hover .itemIcon {
+  color: #f87171;
+}
+
+.pulseDot {
+  width: 6px;
+  height: 6px;
+  background-color: #00bc70;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #00bc70;
+}
+
+.btnPaseDirectoMobile {
+  display: none;
+}
+
+/* ==========================================================================
+   TOAST NOTIFICATION & CONTROLES HAMBURGUESA
+   ========================================================================== */
+.toastNotification {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(17, 20, 26, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.8rem 1.4rem;
+  border-radius: 20px;
+  color: #ffffff;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  animation: 
+    slideUpToast 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+    fadeOutToast 0.4s cubic-bezier(0.16, 1, 0.3, 1) 3s forwards;
+}
+
+.toastIcon { color: #3b82f6; flex-shrink: 0; }
+
+@keyframes slideUpToast {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes fadeOutToast {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(10px) scale(0.95); }
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 1001;
+}
+
+.bar {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 2px;
+}
+
+.mobileOnly {
+  display: none;
+}
+
+/* ==========================================================================
+   VISTA RESPONSIVA MÓVIL (MÁXIMO 768PX)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .hamburger { 
+    display: flex; 
+    order: 3; 
+    padding: 10px; 
+  }
+  .logoSection { order: 1; }
+  .logoImage { height: 30px; }
+  
+  .actions { 
+    order: 2; 
+    gap: 0.6rem; /* Separación sutil e idéntica entre píldoras */
+    align-items: center; 
+  }
+  
+  .btnText { 
+    display: none; /* Esconde el texto de login e inscripción en móvil */
+  }
+
+  /* 🔑 LOGIN: Transformación a botón circular */
+  .btnLoginPill {
+    padding: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* ➕ INSCRIPCIÓN CTA: Transformación a botón circular con acento de marca */
+  .btnAdmisiones {
+    padding: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: #0f62fe;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 12px rgba(15, 98, 254, 0.3);
+  }
+
+  .btnInscripcionIconMobile {
+    display: block; /* Muestra el icono UserPlus en móvil */
+    color: #ffffff;
+  }
+
+  .btnAdmisiones:active,
+  .btnLoginPill:active {
+    transform: scale(0.92); /* Efecto táctil premium */
+  }
+
+  /* ⚡ PASE DIGITAL RÁPIDO (USUARIOS AUTENTICADOS) */
+  .btnPaseDirectoMobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 38px;  
+    height: 38px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.03); 
+    border: 1px solid rgba(255, 255, 255, 0.08); 
+    border-radius: 50%;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .btnPaseDirectoMobile:active {
+    transform: scale(0.92);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+  }
+
+  .pulseDotMobile {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 6px;
+    height: 6px;
+    background-color: #00bc70;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #00bc70;
+  }
+
+  .userDropdownContainer {
+    display: none;
+  }
+
+  /* Estructura del menú Hamburguesa Abierto */
+  .mobileOnly {
+    display: block;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .mobileMenuLinkWithIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .mobileLogoutBtn {
+    background: none;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    color: #f87171 !important;
+  }
+
+  .menuLinks {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background-color: rgba(18, 19, 24, 0.96);
+    backdrop-filter: blur(20px);
+    width: 90%;
+    padding: 2.5rem;
+    border-radius: 24px;
+    gap: 1.6rem;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    z-index: 1000;
+  }
+
+  .menuOpen {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .bar1 { transform: rotate(-45deg) translate(-5px, 6px); }
+  .bar2 { opacity: 0; }
+  .bar3 { transform: rotate(45deg) translate(-5px, -6px); }
+}
+
+/* ==========================================================================
+   VISTA RESPONSIVA INTERMEDIA (TABLETS / IPADS)
+   ========================================================================== */
+@media (min-width: 769px) and (max-width: 1150px) {
+  .navContainer { width: 95%; padding: 0 20px; }
+  .menuLinks { gap: 1.5rem; }
+  .link { font-size: 0.88rem; white-space: nowrap; }
+  .logoImage { height: 32px; }
+  .actions { gap: 0.8rem; }
+}
+/* ==========================================================================
+   EFFECTO SKELETON (RENDIMIENTO PERCIBIDO)
+   ========================================================================== */
+.actionsSkeleton {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.skeletonCircle {
+  height: 38px;
+  width: 110px; /* Ancho estimado de los botones en Desktop */
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 75%
+  );
+  background-size: 200% 100%;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  animation: skeletonPulseShimmer 1.4s infinite linear;
+}
+
+/* El segundo elemento del skeleton (representando al CTA de Inscripción) */
+.skeletonCircle:last-child {
+  width: 130px;
+}
+
+@keyframes skeletonPulseShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Adaptación del Skeleton al entorno móvil */
+@media (max-width: 768px) {
+  .actionsSkeleton {
+    gap: 0.6rem; /* Emparejado con el gap de .actions en móvil */
+  }
+
+  .skeletonCircle,
+  .skeletonCircle:last-child {
+    width: 38px; /* Se convierten en círculos perfectos idénticos a los botones móviles */
+    height: 38px;
+    border-radius: 50%;
+  }
+}
+.userActionsGroup,
+.guestActionsGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* o el gap que tengas definido originalmente */
+}
+.logoImage {
+  height: 40px;
+  width: auto; 
+}

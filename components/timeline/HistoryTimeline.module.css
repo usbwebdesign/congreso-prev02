@@ -1,0 +1,255 @@
+.timelineSection {
+  position: relative;
+  width: 100%;
+  min-height: 750px;
+  padding: 6rem 2rem 4rem 2rem;
+  font-family: 'Sora', sans-serif;
+  overflow: hidden;
+  background-color: #0b0c10;
+  display: flex;
+  align-items: center;
+}
+
+/* ⚡ CORRECCIÓN: Contenedor absoluto con dimensiones explícitas para el fondo */
+.bgLayersContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.bgLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transform: scale(1.05);
+  transition: opacity 0.8s ease-in-out, transform 1.2s ease-out;
+}
+
+/* Elevamos la opacidad para que resalte contra el fondo oscuro */
+.bgActive {
+  opacity: 0.35; 
+  transform: scale(1);
+}
+
+.overlayDim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #000000 0%, transparent 15%, transparent 85%, #000000 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.container {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 0.75rem;
+  max-width: 550px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+/* Espacio de trabajo del diálogo (Asimétrico estilo la referencia) */
+.contentWorkspace {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start; 
+  margin-bottom: 4rem;
+  padding-left: 2rem;
+}
+
+/* Tarjeta de Diálogo */
+.dialogCard {
+  width: 100%;
+  max-width: 380px;
+  background: #ffffff;
+  border-radius: 4px;
+  overflow: visible;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ⚡ CORRECCIÓN: Dimensiones explícitas relativas para el wrapper de Next.js <Image fill /> */
+.cardImageContainer {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background-color: #1a1d24;
+  overflow: hidden;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.cardImageWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.animatedImage {
+  animation: fadeInImage 0.5s ease-in-out forwards;
+  filter: grayscale(100%) contrast(1.15);
+}
+
+@keyframes fadeInImage {
+  from { opacity: 0; }
+  to { opacity: 1; } /* Aseguramos opacidad total interna */
+}
+
+/* Bloque de Información */
+.cardInfo {
+  position: relative;
+  padding: 2rem;
+  background: #ffffff;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #11141a;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.8rem 0;
+}
+
+.highlightYear {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #11141a;
+}
+
+.divider {
+  color: rgba(0, 0, 0, 0.2);
+}
+
+.cardDescription {
+  font-size: 0.85rem;
+  color: #4a5568;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Flecha del diálogo apuntando abajo */
+.dialogArrow {
+  position: absolute;
+  bottom: -10px;
+  left: 35px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #ffffff;
+}
+
+/* Eje de la línea de tiempo */
+.axisContainer {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  padding-top: 1rem;
+}
+
+.lineTrack {
+  position: absolute;
+  top: 21px; /* Centrado perfecto con los nodos de 12px */
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.15);
+  z-index: 1;
+}
+
+.lineProgress {
+  height: 100%;
+  background: #2563eb;
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.yearsGrid {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+}
+
+.yearNode {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+}
+
+.nodeDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #0b0c10;
+  transition: all 0.3s ease;
+}
+
+.nodeLabel {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 0.3s ease, font-weight 0.3s ease;
+}
+
+.nodeActive .nodeDot {
+  background: #2563eb;
+  transform: scale(1.3);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.3);
+}
+
+.nodeActive .nodeLabel {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .contentWorkspace { justify-content: center; padding-left: 0; }
+  .axisContainer { width: 90%; }
+}

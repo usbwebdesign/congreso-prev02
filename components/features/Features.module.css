@@ -1,0 +1,259 @@
+.sectionContainer {
+  color: #ffffff;
+  padding: 100px 4% 120px 4%;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* --- ENCABEZADO --- */
+.header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin: 0 0 16px 0;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0 0 12px 0;
+}
+
+.description {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #a3a3a3;
+  max-width: 640px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* --- GRID LAYOUT --- */
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.card {
+  position: relative;
+  height: 340px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: #0a0a0a;
+  cursor: pointer;
+}
+
+.cardFullWidth {
+  grid-column: span 2;
+  height: 380px;
+}
+
+.imageWrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.cardImage {
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.card:hover .cardImage {
+  transform: scale(1.03);
+}
+
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+}
+
+/* --- CONTENIDOS DE TARJETAS --- */
+.cardContent,
+.cardContentCentric {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardContent {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.cardContentCentric {
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.cardTitle {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin: auto 0;
+}
+
+.cardTitleLarge {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin: 0 0 16px 0;
+}
+
+.cardButton {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #000000;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 10px 24px;
+  border-radius: 9999px;
+  cursor: pointer;
+  align-self: flex-end;
+  transition: background-color 0.2s ease;
+}
+
+.cardFullWidth .cardButton {
+  align-self: flex-start;
+}
+
+.cardButton:hover {
+  background-color: #ffffff;
+}
+
+/* --- INTERFAZ DE LA MODAL CARD --- */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modalContent {
+  background-color: #0d0d0d;
+  width: 100%;
+  max-width: 540px;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+}
+
+.closeButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  z-index: 50;
+  transition: background-color 0.2s ease;
+}
+
+.closeButton:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.modalImageWrapper {
+  position: relative;
+  height: 200px;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  padding: 24px;
+}
+
+.modalImage {
+  object-fit: cover;
+}
+
+.modalImageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 30%, #0d0d0d 100%);
+}
+
+.modalTitle {
+  position: relative;
+  z-index: 10;
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.modalBody {
+  padding: 0 24px 28px 24px;
+}
+
+.modalText {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #cccccc;
+  margin: 0 0 24px 0;
+}
+
+.modalCta {
+  background-color: #1d4ed8;
+  color: #ffffff;
+  border: none;
+  width: 100%;
+  padding: 14px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modalCta:hover {
+  background-color: #2563eb;
+}
+
+/* --- RESPONSIVE MODES --- */
+@media (max-width: 768px) {
+  .sectionContainer { padding: 64px 6% 80px 6%; }
+  .title { font-size: 2rem; }
+  .gridContainer { grid-template-columns: 1fr; }
+  .cardFullWidth { grid-column: span 1; height: 340px; }
+  .cardContentCentric { justify-content: center; align-items: center; text-align: center; }
+  .cardTitle, .cardTitleLarge { font-size: 1.8rem; }
+  .cardFullWidth .cardButton { align-self: center; }
+  .cardContent { padding: 32px; }
+}

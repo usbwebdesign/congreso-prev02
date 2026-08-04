@@ -1,0 +1,357 @@
+.directoryContainer {
+  color: #ffffff;
+  width: 100%;
+  max-width: 1400px; /* Ancho completo */
+  margin-top: 100px !important;
+  margin: 0 auto;
+  padding: 60px 4% 120px 4%;
+}
+
+/* --- BARRA DE FILTROS SEGMENTADA (STYLE APPLE) --- */
+.filterWrapper {
+  display: flex;
+  margin-bottom: 40px;
+}
+
+.segmentedControl {
+  background-color: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 4px;
+  border-radius: 12px;
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap; /* Permite que los botones bajen ordenadamente en pantallas reducidas */
+}
+
+.filterButton {
+  background: none;
+  border: none;
+  color: #71717a;
+  padding: 8px 24px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.filterButton:hover {
+  color: #ffffff;
+}
+
+.filterActive {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* --- COMPONENTE DE FILAS REGULARES --- */
+.rowWrapper {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background-color: transparent;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hover sutil */
+.rowWrapper:hover:not(.rowExpanded) {
+  background-color: rgba(255, 255, 255, 0.015);
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Fila activa con tu degradado corregido (100%) */
+.rowExpanded {
+  background: linear-gradient(
+    90deg, 
+    rgba(37, 99, 235, 0.03) 0%, 
+    rgba(255, 255, 255, 0.01) 50%, 
+    transparent 100%
+  );
+  border-bottom-color: rgba(37, 99, 235, 0.15); 
+  box-shadow: inset 1px 0px 0px 0px rgba(37, 99, 235, 0.2); /* Línea acento vertical milimétrica */
+}
+
+/* --- ENCABEZADO --- */
+.header {
+  margin-bottom: 40px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.title {
+  font-family: "Sora", -apple-system, sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+/* --- CONTENEDOR DE LISTA --- */
+.listContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- FILA PRINCIPAL (TRIGGER) --- */
+.mainRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.profileMeta {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.avatarWrapper {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  border-radius: 4px; /* Forma rectangular impecable */
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.avatarImage {
+  object-fit: cover !important;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.speakerName {
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.roleAndControl {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  color: #71717a;
+}
+
+.speakerRole {
+  font-size: 0.95rem;
+  color: #ffffff; /* Texto blanco para el cargo */
+  margin: 0;
+}
+
+.chevronWrapper {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+}
+
+.chevronActive {
+  transform: rotate(180deg);
+  color: #ffffff;
+}
+
+/* --- ACORDEÓN DESPLEGABLE INTEGRADO NATIVO --- */
+.dropdownContent {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s ease;
+  overflow: hidden; 
+  visibility: hidden; 
+}
+
+.dropdownContent.show {
+  grid-template-rows: 1fr;
+  visibility: visible; 
+}
+
+.dropdownInner {
+  min-height: 0;
+  padding: 0 8px 32px 100px; 
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.bioText {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #e4e4e7;
+  max-width: 650px;
+  margin: 0;
+}
+
+/* --- SECCIÓN DE ACCIONES CON BOTONES GLOW (COLUMNAS SIMÉTRICAS) --- */
+.actionsCol {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 180px; /* Ancho fijo para forzar la alineación y simetría exacta */
+}
+
+.actionItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Empuja el texto a la izq y el icono a la der */
+  width: 100%;
+}
+
+.actionLabel {
+  font-size: 0.9rem;
+  color: #71717a; /* Color gris suave neutral */
+  font-weight: 500;
+}
+
+.iconBox {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a1a1aa;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
+  backdrop-filter: blur(4px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.iconBox:hover {
+  color: #ffffff;
+  border-color: rgba(37, 99, 235, 0.4); /* Tu azul de identidad */
+  background: linear-gradient(180deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.02) 100%);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1); /* Glow exterior discreto */
+  transform: translateY(-1px);
+}
+
+/* --- PAGINACIÓN CÁPSULA --- */
+.paginationWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 56px;
+}
+
+.paginationCapsule {
+  display: flex;
+  align-items: center;
+  background-color: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 6px 14px;
+  border-radius: 99px;
+  gap: 10px;
+}
+
+.pageNumber {
+  background: none;
+  border: none;
+  color: #ffffff;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.pageNumber:hover:not(.activePage) {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.activePage {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.pageArrow {
+  background: none;
+  border: none;
+  color: #71717a;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.pageArrow:hover:not(:disabled) {
+  color: #ffffff;
+}
+
+.pageArrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* --- AJUSTES RESPONSIVOS --- */
+@media (max-width: 900px) {
+  .mainRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 0;
+  }
+  
+  .profileMeta {
+    gap: 12px;
+  }
+  
+  .avatarWrapper {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .speakerName {
+    font-size: 1.3rem;
+  }
+  
+  .roleAndControl {
+    width: 100%;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  
+  .dropdownInner {
+    padding: 0 0 24px 0; 
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .bioText {
+    font-size: 0.95rem;
+  }
+  
+  .actionsCol {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 20px;
+    width: 100%; /* Reseteo para móvil */
+  }
+
+  .actionItem {
+    width: auto;
+    gap: 8px;
+  }
+}

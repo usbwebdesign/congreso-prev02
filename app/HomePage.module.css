@@ -1,0 +1,105 @@
+.homeWrapper {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #000000; /* Negro absoluto de base */
+  position: relative;
+  overflow-x: hidden;
+  
+  /* Gradiente extendido pero con INTENSIDAD ATENUADA (Ultra sutil) */
+  background-image: 
+    linear-gradient(
+      to top,
+      #000000 0%,                  /* Footer completamente protegido en negro puro */
+      rgba(37, 99, 235, 0.08) 8%,    /* Bajamos el pico máximo de 0.14 a solo 0.08 */
+      rgba(37, 99, 235, 0.04) 35%,   /* Atenuamos el cuerpo en las secciones bajas */
+      rgba(37, 99, 235, 0.02) 65%,   /* Un aura milimétrica en el scroll medio */
+      rgba(37, 99, 235, 0.005) 85%,  /* Prácticamente imperceptible al ojo, solo rompe el vacío */
+      transparent 95%              /* Muere con suavidad absoluta antes de la Navbar */
+    );
+}
+
+.contentContainer {
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+/* Contenedor del esqueleto alineado al diseño del Hero */
+.skeletonWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  width: 100%;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* Base de los bloques del esqueleto con pulso premium */
+.skeletonHeroTitle,
+.skeletonHeroSubtitle,
+.skeletonBadge {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 8px;
+}
+
+.skeletonHeroTitle {
+  width: 60%;
+  max-width: 500px;
+  height: 48px;
+  margin-bottom: 1.5rem;
+}
+
+.skeletonHeroSubtitle {
+  width: 40%;
+  max-width: 320px;
+  height: 20px;
+  margin-bottom: 2.5rem;
+}
+
+.skeletonBadge {
+  width: 140px;
+  height: 40px;
+  border-radius: 20px; /* Estilo píldora tipo botón */
+}
+
+/* Animación fluida de barrido de luz */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+.skeletonSectionWrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.skeletonLineLong {
+  width: 40%;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+}
+
+.skeletonLineShort {
+  width: 25%;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+}

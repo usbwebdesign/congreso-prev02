@@ -1,0 +1,218 @@
+.sectionContainer {
+  color: #ffffff;
+  padding: 100px 4% 120px 4%;
+  width: 100%;
+  max-width: 1200px; /* Expandido para dar aire al formato horizontal */
+  margin: 0 auto;
+}
+
+/* --- SECCIÓN ACCESO --- */
+.accessHeader {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.accessTitle {
+  font-size: 3.2rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.accentLine {
+  width: 40px;
+  height: 3px;
+  background-color: #0f62fe; /* Azul IBM unificado */
+  margin: 12px auto 0 auto;
+  border-radius: 99px;
+}
+
+/* --- SUB-BLOQUE CRECIMIENTO --- */
+.growthHeader {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.growthTitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #f3f4f6;
+  margin: 0 0 14px 0;
+}
+
+.growthSubtitle {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #9ca3af;
+  max-width: 580px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   NUEVO ENFOQUE MONOLÍTICO: TARJETA HORIZONTAL RECTANGULAR MARCADA
+   ========================================================================== */
+.singleCardContainer {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.ticketCardRectangular {
+  display: flex;
+  background-color: #121318; /* Zinc profundo premium */
+  border: 1px solid rgba(255, 255, 255, 0.14); /* Borde más marcado y nítido */
+  border-radius: 12px; /* Menos redondeado, look más industrial y arquitectónico */
+  transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  overflow: hidden;
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.4);
+}
+
+.ticketCardRectangular:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* BLOQUE IZQUIERDO: DETALLES DE COMPRA Y CONTROL */
+.cardLeftBlock {
+  flex: 0 0 380px; /* Ancho fijo para el bloque de control en desktop */
+  background: rgba(255, 255, 255, 0.02);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 56px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.badgeLabel {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #0f62fe; /* Azul de acento institucional */
+  margin-bottom: 12px;
+}
+
+.planTitle {
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+}
+
+.planDescription {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #9ca3af;
+  margin: 0 0 40px 0;
+}
+
+.cardCtaButton {
+  background-color: #0f62fe;
+  color: #ffffff;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  padding: 14px 28px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(15, 98, 254, 0.25);
+  text-align: center;
+}
+
+.cardCtaButton:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(15, 98, 254, 0.35);
+}
+
+.cardCtaButton:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* BLOQUE DERECHO: RENDIMIENTO DE BENEFICIOS */
+.cardRightBlock {
+  flex: 1;
+  padding: 56px 48px;
+  display: flex;
+  align-items: center;
+}
+
+.benefitsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+}
+
+.benefitItem {
+  display: flex;
+  align-items: flex-start;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 16px;
+}
+
+.benefitItem:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.benefitText {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #c1c7cd; /* Tono de texto suavizado tipo IBM */
+  margin: 0;
+}
+
+.benefitLabel {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   MODO RESPONSIVO (TRANSICIÓN DE FILA A COLUMNA ADAPTATIVA)
+   ========================================================================== */
+@media (max-width: 900px) {
+  .ticketCardRectangular {
+    flex-direction: column; /* Cambia a vertical en pantallas compactas de forma natural */
+  }
+
+  .cardLeftBlock {
+    flex: none;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 40px 32px;
+    text-align: center;
+    align-items: center;
+  }
+
+  .planTitle {
+    font-size: 2rem;
+  }
+
+  .planDescription {
+    margin-bottom: 24px;
+    max-width: 420px;
+  }
+
+  .cardCtaButton {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .cardRightBlock {
+    padding: 40px 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .accessTitle { font-size: 2.5rem; }
+  .growthTitle { font-size: 1.4rem; }
+  .cardLeftBlock, .cardRightBlock { padding: 32px 20px; }
+}

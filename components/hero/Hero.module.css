@@ -1,0 +1,254 @@
+.heroContainer {
+  position: relative;
+  height: 100dvh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  background-color: #000000;
+  
+  padding-top: clamp(72px, 12dvh, 95px); 
+  padding-bottom: clamp(20px, 4dvh, 48px);
+}
+
+.backgroundImageWrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.bgImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.35;
+}
+
+.overlayGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0.6) 60%,
+    #000000 100%
+  );
+}
+
+.content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 24px;
+  width: 100%;
+  flex-grow: 1;
+  gap: clamp(16px, 4dvh, 40px); 
+}
+
+.logoWrapper {
+  width: 100%;
+  max-width: clamp(230px, 40dvh, 460px);
+  margin-bottom: 0;
+  transition: max-width 0.3s ease;
+}
+
+.logo {
+  width: 100%;
+  height: auto;
+}
+
+/* ==========================================================================
+   ESTRUCTURA DE SKELETON LOADERS & SHIMMER
+   ========================================================================== */
+.skeletonContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: clamp(16px, 4dvh, 40px);
+}
+
+.skeletonCountdown,
+.skeletonButton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02) 25%,
+    rgba(255, 255, 255, 0.07) 50%,
+    rgba(255, 255, 255, 0.02) 75%
+  );
+  background-size: 200% 100%;
+  animation: heroShimmer 1.4s infinite linear;
+}
+
+.skeletonCountdown {
+  width: 100%;
+  max-width: 480px;
+  height: clamp(80px, 12dvh, 110px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.skeletonButton {
+  width: 200px;
+  height: clamp(44px, 5dvh, 52px);
+  border-radius: 9999px;
+}
+
+@keyframes heroShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ==========================================================================
+   CONTENIDO ANIMADO POST-LOAD
+   ========================================================================== */
+.animatedContentBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: clamp(16px, 4dvh, 40px);
+  animation: fadeInMotion 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes fadeInMotion {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ctaButton {
+  background-color: #1d4ed8; 
+  color: #ffffff;
+  box-shadow: 0 10px 25px rgba(29, 78, 216, 0.3);
+  border: none;
+  font-weight: 700;
+  text-decoration: none; 
+  display: inline-block; 
+  cursor: pointer;
+  border-radius: 9999px;
+  transition: background-color 0.25s ease, transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 0; 
+
+  font-size: clamp(0.95rem, 2dvh, 1.05rem);
+  padding: clamp(12px, 1.8dvh, 15px) clamp(44px, 5dvh, 56px);
+}
+
+.ctaButton:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+/* Efecto háptico premium al presionar */
+.ctaButton:active {
+  transform: scale(0.96);
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.scrollArrow {
+  position: relative;
+  margin-top: 8px;
+  animation: bounce 2s infinite;
+  opacity: 0.6;
+  color: #ffffff;
+  cursor: pointer;
+  transition: opacity 0.2s ease, display 0.2s;
+  z-index: 10; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scrollArrow:hover {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   1. 🖥️ CONTROL DE ESCRITORIO GRANDE
+   ========================================================================== */
+@media (min-width: 1200px) and (min-height: 750px) {
+  .heroContainer {
+    padding-top: 110px; 
+    padding-bottom: 60px;
+  }
+
+  .content,
+  .skeletonContainer,
+  .animatedContentBlock {
+    gap: 48px; 
+  }
+
+  .logoWrapper {
+    max-width: 540px; 
+  }
+
+  .skeletonCountdown {
+    max-width: 540px;
+    height: 120px;
+  }
+
+  .skeletonButton {
+    width: 250px;
+    height: 54px;
+  }
+
+  .ctaButton {
+    font-size: 1.1rem; 
+    padding: 16px 60px;
+  }
+}
+
+/* ==========================================================================
+   2. 🔄 EXTREMO CRÍTICO: LANDSCAPE MÓVIL
+   ========================================================================== */
+@media (max-height: 480px) {
+  .heroContainer {
+    padding-top: 64px; 
+    padding-bottom: 8px;
+  }
+  
+  .content,
+  .skeletonContainer,
+  .animatedContentBlock {
+    gap: 10px; 
+  }
+
+  .logoWrapper {
+    max-width: 200px; 
+  }
+
+  .skeletonCountdown {
+    max-width: 320px;
+    height: 50px;
+  }
+
+  .skeletonButton {
+    width: 160px;
+    height: 36px;
+  }
+
+  .ctaButton {
+    font-size: 0.85rem;
+    padding: 10px 36px;
+  }
+
+  .scrollArrow {
+    display: none;
+  }
+}

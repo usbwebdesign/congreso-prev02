@@ -1,0 +1,805 @@
+/* ==========================================================================
+   1. ESTRUCTURA GLOBAL Y FONDOS
+   ========================================================================== */
+
+.container {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #090a0f;
+  color: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  box-sizing: border-box;
+
+  /* Textura minimalista: Retícula de puntos tenue */
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Capa de viñeta suave */
+.grainTexture {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 0%, rgba(18, 18, 24, 0) 0%, #090a0f 85%);
+}
+
+/* Luz ambiental optimizada con GPU */
+.ambientLightOne {
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%) translateZ(0);
+  width: 600px;
+  height: 300px;
+  background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.contentWrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ==========================================================================
+   2. HEADER Y NAVEGACIÓN
+   ========================================================================== */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #a1a1aa;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.subtitle {
+  color: #9ca3af;
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  background: rgba(15, 16, 22, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  gap: 1rem;
+}
+
+.navLeft,
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.navDivider {
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.welcomeText {
+  font-size: 0.85rem;
+  color: #a1a1aa;
+  white-space: nowrap;
+}
+
+.adminName {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.createUserBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.85rem;
+  background: #ffffff;
+  color: #09090b;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.createUserBtn:hover {
+  background: #e4e4e7;
+  transform: translateY(-1px);
+}
+
+.createUserBtn:active {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   3. PESTAÑA / CONTENEDOR DE SECCIÓN
+   ========================================================================== */
+
+.tabGroup {
+  display: flex;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.35rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  width: fit-content;
+  margin-bottom: 1.5rem;
+}
+
+.tabBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.1rem;
+  border: none;
+  background: transparent;
+  color: #a1a1aa;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tabBtn:hover {
+  color: #ffffff;
+}
+
+.tabActive {
+  background: rgba(99, 102, 241, 0.2);
+  color: #818cf8;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.sectionContainer {
+  width: 100%;
+}
+
+/* ==========================================================================
+   4. BENTO GRID METRICS
+   ========================================================================== */
+
+.bentoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.bentoCard {
+  background: rgba(15, 16, 22, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.bentoCard:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(20, 21, 28, 0.85);
+}
+
+.bentoHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bentoLabel {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a1a1aa;
+  font-weight: 500;
+}
+
+.bentoIcon {
+  color: #71717a;
+}
+
+.bentoValue {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0.5rem 0 0.25rem 0;
+  letter-spacing: -0.02em;
+}
+
+.bentoValueDate {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0.75rem 0 0.25rem 0;
+}
+
+.bentoSubtext {
+  font-size: 0.75rem;
+  color: #71717a;
+}
+
+.bentoStatus {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0.6rem 0 0.25rem 0;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+}
+
+/* ==========================================================================
+   5. DROPZONE (ZONA DE CARGA)
+   ========================================================================== */
+
+.dropzone {
+  position: relative;
+  border: 1.5px dashed rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(15, 16, 22, 0.5);
+  padding: 3rem 2rem;
+  text-align: center;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.dropzone:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(20, 21, 28, 0.7);
+}
+
+.fileInput {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.dropzoneLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.uploadIconWrapper {
+  padding: 0.85rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #e4e4e7;
+}
+
+.dropzoneTitle {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #f3f4f6;
+}
+
+.dropzoneHint {
+  font-size: 0.85rem;
+  color: #71717a;
+}
+
+.dropzoneHint code {
+  color: #a1a1aa;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   6. PREVIEW CARD & RESULTADOS
+   ========================================================================== */
+
+.previewCard {
+  background: rgba(15, 16, 22, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.fileBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fileInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.csvIcon {
+  color: #34d399;
+}
+
+.fileName {
+  font-weight: 500;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.fileDetails {
+  font-size: 0.8rem;
+  color: #a1a1aa;
+  margin: 0;
+}
+
+.removeBtn {
+  background: transparent;
+  border: none;
+  color: #71717a;
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 6px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.removeBtn:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.actionFooter {
+  padding: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submitBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #000000;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.submitBtn:hover {
+  opacity: 0.9;
+}
+
+.submitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.resultCard {
+  background: rgba(15, 16, 22, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.resultHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.successIcon {
+  color: #10b981;
+}
+
+.resultHeader h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.statBox {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.statNumber {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.statNumber.hasErrors {
+  color: #f87171;
+}
+
+.statLabel {
+  font-size: 0.85rem;
+  color: #a1a1aa;
+}
+
+.errorLogs {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  padding: 1rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.errorLogs ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.8rem;
+  color: #d4d4d8;
+}
+
+.resetBtn {
+  align-self: flex-start;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.errorAlert {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   7. SKELETON LOADERS
+   ========================================================================== */
+
+.skeletonBase {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.07) 50%,
+    rgba(255, 255, 255, 0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmerLoading 1.5s infinite linear;
+  border-radius: 6px;
+  will-change: background-position;
+}
+
+@keyframes shimmerLoading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeletonNavbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  background: rgba(15, 16, 22, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+}
+
+.skeletonNavLeft,
+.skeletonNavRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.skBadge {
+  width: 90px;
+  height: 26px;
+  border-radius: 6px;
+}
+
+.skWelcome {
+  width: 140px;
+  height: 18px;
+}
+
+.skButton {
+  width: 120px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.skLogout {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.skeletonCard {
+  background: rgba(15, 16, 22, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.skCardHeader {
+  width: 110px;
+  height: 14px;
+}
+
+.skCardValue {
+  width: 70px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.skCardSubtext {
+  width: 130px;
+  height: 12px;
+}
+
+.skeletonDropzone {
+  border: 1.5px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(15, 16, 22, 0.4);
+  padding: 3.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.skIconCircle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+}
+
+.skDropTitle {
+  width: 180px;
+  height: 20px;
+  border-radius: 6px;
+}
+
+.skDropSub {
+  width: 320px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   8. MEDIA QUERIES (RESPONSIVE)
+   ========================================================================== */
+
+/* Laptop / Desktops medianos (<= 1024px) */
+@media (max-width: 1024px) {
+  .container {
+    padding: 2rem 1.25rem;
+  }
+
+  .ambientLightOne {
+    width: 100%;
+  }
+}
+
+/* Tablets (<= 768px) */
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem 1rem;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .subtitle {
+    font-size: 0.875rem;
+  }
+
+  .header {
+    margin-bottom: 1.25rem;
+  }
+
+  .bentoGrid {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .dropzone {
+    padding: 2.25rem 1.25rem;
+  }
+
+  .dropzoneTitle {
+    font-size: 0.95rem;
+  }
+
+  .dropzoneHint {
+    font-size: 0.8rem;
+  }
+
+  .tabGroup {
+    width: 100%;
+    margin-bottom: 1.25rem;
+  }
+
+  .tabBtn {
+    flex: 1;
+    justify-content: center;
+    padding: 0.6rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .resultCard {
+    padding: 1.25rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile Standard (<= 640px) */
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem 0.75rem;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+    padding: 1rem;
+  }
+
+  .navLeft,
+  .navRight {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .navDivider {
+    display: none;
+  }
+
+  .createUserBtn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .fileBar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .removeBtn {
+    align-self: flex-end;
+    margin-top: -0.5rem;
+  }
+
+  .actionFooter {
+    padding: 1rem;
+  }
+
+  .submitBtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .skeletonNavbar {
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .skeletonNavLeft,
+  .skeletonNavRight {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .skDropSub {
+    width: 95%;
+  }
+
+  .resetBtn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Mobile Pequeño (<= 380px) */
+@media (max-width: 380px) {
+  .title {
+    font-size: 1.35rem;
+  }
+
+  .welcomeText {
+    font-size: 0.78rem;
+  }
+
+  .tabBtn {
+    font-size: 0.75rem;
+    gap: 0.3rem;
+  }
+}
