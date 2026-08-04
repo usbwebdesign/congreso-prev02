@@ -122,13 +122,19 @@ function ActualizarPasswordContent() {
 
       if (updateError) throw updateError;
 
+      // Actualizar sesión interna
       await supabase.auth.getSession();
       setIsSuccess(true);
 
+      // Limpiar el Hash de la URL para romper el bucle con la guardia de Home
+      if (typeof window !== 'undefined' && window.history.replaceState) {
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+
+      // Redirección limpia hacia el Home
       setTimeout(() => {
-        router.push('/');
-        router.refresh();
-      }, 1500);
+        window.location.href = '/';
+      }, 1200);
     } catch (err) {
       if (err instanceof Error) {
         setErrorMsg(err.message);

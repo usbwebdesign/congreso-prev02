@@ -31,15 +31,17 @@ export default function Home() {
   const router = useRouter();
   const { user, loading } = useAuth();
 
-  // Guardián e Interceptor: Si el usuario entra por un enlace de invitación o recuperación
+  // Guardián e Interceptor: Redirige solo si el hash contiene un token de acceso activo
   useEffect(() => {
     if (typeof window !== 'undefined' && window.location.hash) {
       const hash = window.location.hash;
-      if (
-        hash.includes('type=invite') ||
-        hash.includes('type=recovery') ||
-        hash.includes('type=signup')
-      ) {
+      const tieneToken = hash.includes('access_token');
+      const esFlujoPassword = 
+        hash.includes('type=invite') || 
+        hash.includes('type=recovery') || 
+        hash.includes('type=signup');
+
+      if (tieneToken && esFlujoPassword) {
         router.replace(`/actualizar-password${hash}`);
       }
     }
