@@ -58,7 +58,7 @@ async function getSupabaseUserClient() {
 }
 
 /**
- * Cliente de Supabase con Service Role (By-pass RLS)
+ * Cliente de Supabase con Service Role (Bypasses RLS)
  */
 function getSupabaseAdmin() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -85,13 +85,12 @@ function getBaseUrl() {
 // ==================== HELPER DE NORMALIZACIÓN ====================
 
 /**
- * Normaliza la facultad para que no choque con la restricción SQL del backend
+ * Normaliza la facultad para cumplir con las restricciones de la base de datos
  */
 function normalizarFacultad(rol: string, facultadOriginal?: string): string {
   const rolLimpio = rol.trim().toLowerCase();
   const facLimpia = facultadOriginal?.trim().toUpperCase() || '';
 
-  // Alumnos y Exalumnos requieren facultades específicas
   if (['alumno', 'exalumno'].includes(rolLimpio)) {
     if (['FCH', 'FCEAN', 'FCYT'].includes(facLimpia)) {
       return facLimpia;
@@ -99,14 +98,13 @@ function normalizarFacultad(rol: string, facultadOriginal?: string): string {
     return 'FCH'; // Valor por defecto válido
   }
 
-  // Para roles administrativos, docentes, ponentes u organizadores
   return facultadOriginal?.trim() || 'Universidad Simón Bolívar';
 }
 
 // ==================== ACCIONES DE SERVIDOR ====================
 
 /**
- * 1. Obtener métricas para el Bento Grid
+ * 1. Obtener métricas para el Dashboard
  */
 export async function obtenerStatsAdminAction(): Promise<StatsDashboard> {
   const supabaseUserClient = await getSupabaseUserClient();
@@ -133,7 +131,7 @@ export async function obtenerStatsAdminAction(): Promise<StatsDashboard> {
 }
 
 /**
- * 2. Crear un usuario manualmente desde el Modal
+ * 2. Crear un usuario manualmente desde el Modal Admin
  */
 export async function crearUsuarioManualAction(payload: {
   nombre_completo: string;
@@ -148,7 +146,6 @@ export async function crearUsuarioManualAction(payload: {
     const { data: { user }, error: authError } = await supabaseUserClient.auth.getUser();
     if (authError || !user) throw new Error('No autorizado');
 
-    // Verificar si es Admin
     const { data: perfil } = await supabaseUserClient
       .from('profiles')
       .select('rol')
@@ -164,7 +161,6 @@ export async function crearUsuarioManualAction(payload: {
     const redirectUrl = `${getBaseUrl()}/actualizar-password`;
     const facultadValida = normalizarFacultad(payload.rol, payload.facultad);
 
-    // Verificar si ya existe en profiles
     const { data: usuarioExistente } = await supabaseAdmin
       .from('profiles')
       .select('id')
@@ -175,7 +171,6 @@ export async function crearUsuarioManualAction(payload: {
       return { success: false, message: `El correo [${emailLimpio}] ya se encuentra registrado.` };
     }
 
-    // Invitar por email mediante Supabase Auth Admin
     const { data: inviteData, error: inviteError } = await supabaseAdmin.auth.admin.inviteUserByEmail(
       emailLimpio,
       {
@@ -193,7 +188,6 @@ export async function crearUsuarioManualAction(payload: {
       return { success: false, message: inviteError.message };
     }
 
-    // Crear/actualizar registro en la tabla profiles
     if (inviteData.user) {
       const { error: profileError } = await supabaseAdmin.from('profiles').upsert({
         id: inviteData.user.id,
@@ -223,7 +217,7 @@ export async function crearUsuarioManualAction(payload: {
 }
 
 /**
- * 3. Acción de Importación Masiva CSV
+ * 3. Acción de Importación Masiva desde CSV
  */
 export async function importarUsuariosAction(
   usuarios: UsuarioCSV[],
@@ -254,7 +248,6 @@ export async function importarUsuariosAction(
     const universidadLimpia = usuario.universidad?.trim() || 'Universidad Simón Bolívar';
     const rolLimpio = usuario.rol?.trim().toLowerCase() || 'alumno';
     
-    // Normalizar la facultad según las reglas SQL de la base de datos
     const facultadValida = normalizarFacultad(rolLimpio, usuario.facultad);
     const salaLimpia = usuario.sala?.trim() || null;
 
@@ -265,7 +258,6 @@ export async function importarUsuariosAction(
     }
 
     try {
-      // 1. Verificar si el usuario ya existe en profiles
       const { data: usuarioExistente } = await supabaseAdmin
         .from('profiles')
         .select('id')
@@ -278,7 +270,6 @@ export async function importarUsuariosAction(
         continue;
       }
 
-      // 2. Enviar invitación por email
       const { data: nuevoUsuario, error: inviteError } = await supabaseAdmin.auth.admin.inviteUserByEmail(
         correoLimpio,
         {
@@ -298,7 +289,6 @@ export async function importarUsuariosAction(
         continue;
       }
 
-      // 3. Crear el perfil correspondiente en Supabase
       if (nuevoUsuario.user) {
         const { error: profileError } = await supabaseAdmin.from('profiles').upsert({
           id: nuevoUsuario.user.id,
@@ -325,7 +315,6 @@ export async function importarUsuariosAction(
     }
   }
 
-  // Registrar auditoría de importación
   await supabaseAdmin.from('import_logs').insert({
     created_by: user.id,
     total_records: usuarios.length,
