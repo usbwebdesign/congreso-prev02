@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { UserCircle, Key, UserPlus, CheckCircle2, Ticket, LogOut, ChevronDown } from 'lucide-react'; 
@@ -11,7 +11,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import RegistrationModal from '../modal/RegistrationModal'; 
 import styles from './Navbar.module.css';
 
-const Navbar: React.FC = () => {
+// Componente interno con la lógica que utiliza useSearchParams
+const NavbarContent: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -287,4 +288,11 @@ const Navbar: React.FC = () => {
   );
 };
 
-export default Navbar;
+// Componente principal exportado envuelto en Suspense
+export default function Navbar() {
+  return (
+    <Suspense fallback={null}>
+      <NavbarContent />
+    </Suspense>
+  );
+}
