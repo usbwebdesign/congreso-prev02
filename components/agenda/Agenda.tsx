@@ -27,7 +27,7 @@ const containerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.05, // Retraso fluido entre tarjetas consecutivas
+      staggerChildren: 0.05,
     },
   },
 };
@@ -133,7 +133,7 @@ export default function Agenda() {
       <motion.div 
         key={event.id} 
         variants={cardVariants}
-        layout="position" // Mueve suavemente las tarjetas al cambiar filtros
+        layout="position"
         className={rowClass}
         onClick={() => isInteractive && setSelectedEvent(event)}
       >
@@ -239,19 +239,15 @@ export default function Agenda() {
           </motion.div>
         ) : (
           <motion.div
-            key={`${activeDay}-${activeFaculty}`} // Limpia el viewport al transicionar filtros
+            key={`${activeDay}-${activeFaculty}`}
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.05 }}
             className={styles.timeline}
           >
-            {/* Lista plana controlada por indexación */}
             {filteredEvents.map((event, index) => {
-              // Si no está expandido y pasa el corte, se omite el render
               if (!isExpanded && index >= INITIAL_VISIBLE_COUNT) return null;
-              
-              // Los elementos que superan el conteo inicial se marcan para animación
               const isRevealedElement = index >= INITIAL_VISIBLE_COUNT;
               return renderEventRow(event, isRevealedElement);
             })}
@@ -259,7 +255,7 @@ export default function Agenda() {
         )}
       </AnimatePresence>
 
-      {/* Botoneras de Expansión Integradas de Forma Segura */}
+      {/* Botoneras de Expansión Integradas */}
       {!dbLoading && filteredEvents.length > 0 && (
         <div className={styles.expandButtonContainer}>
           {!isExpanded && hiddenEventsCount > 0 ? (
@@ -276,21 +272,36 @@ export default function Agenda() {
         </div>
       )}
 
-      {/* Ventana Emergente (Modal) */}
+      {/* Ventana Emergente (Modal Reestructurado) */}
       {selectedEvent && (
         <div className={styles.modalOverlay} onClick={() => setSelectedEvent(null)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <button className={styles.closeButton} onClick={() => setSelectedEvent(null)}><X size={18} /></button>
+            <button className={styles.closeButton} onClick={() => setSelectedEvent(null)}>
+              <X size={18} />
+            </button>
+            
             <div className={styles.modalHeader}>
-              <span className={styles.modalLabel}>{selectedEvent.type === 'activity' ? 'Actividad Práctica' : 'Información del Bloque'}</span>
+              <span className={styles.modalLabel}>
+                {selectedEvent.type === 'activity' ? 'Actividad Práctica' : 'Información del Bloque'}
+              </span>
               <h3 className={styles.modalTitle}>{selectedEvent.title}</h3>
-              <p className={styles.modalTimeSlot}>Horario: {selectedEvent.time_start} a {selectedEvent.time_end} hrs</p>
+              <p className={styles.modalTimeSlot}>
+                Horario: {selectedEvent.time_start} a {selectedEvent.time_end} hrs
+              </p>
             </div>
+
             <div className={styles.modalBody}>
               {selectedEvent.speaker_name && (
                 <div style={{ marginBottom: '16px' }}>
-                  <h4 className={styles.modalSpeakerTitle}>{selectedEvent.type === 'activity' ? 'Facilitador / Coordinador' : 'Expositor / Panelistas'}</h4>
-                  <p className={styles.modalSpeakerName}>{selectedEvent.speaker_name} {selectedEvent.speaker_role && <span className={styles.modalSpeakerRole}>({selectedEvent.speaker_role})</span>}</p>
+                  <h4 className={styles.modalSpeakerTitle}>
+                    {selectedEvent.type === 'activity' ? 'Facilitador / Coordinador' : 'Expositor / Panelistas'}
+                  </h4>
+                  <p className={styles.modalSpeakerName}>
+                    {selectedEvent.speaker_name}{' '}
+                    {selectedEvent.speaker_role && (
+                      <span className={styles.modalSpeakerRole}>({selectedEvent.speaker_role})</span>
+                    )}
+                  </p>
                 </div>
               )}
               {selectedEvent.description && (
@@ -302,13 +313,33 @@ export default function Agenda() {
               {selectedEvent.bio && (
                 <div style={{ marginBottom: '16px', paddingTop: '8px', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
                   <h4 className={styles.modalSpeakerTitle}>Perfil del Ponente</h4>
-                  <p className={styles.modalBioText} style={{ fontStyle: 'italic', backgroundColor: 'rgba(255,255,255,0.02)', padding: '10px', borderRadius: '8px' }}>{selectedEvent.bio}</p>
+                  <p 
+                    className={styles.modalBioText} 
+                    style={{ 
+                      fontStyle: 'italic', 
+                      backgroundColor: 'rgba(255,255,255,0.02)', 
+                      padding: '10px', 
+                      borderRadius: '8px' 
+                    }}
+                  >
+                    {selectedEvent.bio}
+                  </p>
                 </div>
               )}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingTop: '16px', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                <a href={generateGoogleCalendarUrl(selectedEvent)} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', padding: '12px', backgroundColor: '#2563eb', color: '#ffffff', borderRadius: '12px', fontWeight: 600, fontSize: '14px', textDecoration: 'none', textAlign: 'center' }}><Calendar size={16} /> Agendar en Google Calendar</a>
-                <button className={styles.modalCloseCta} onClick={() => setSelectedEvent(null)}>Volver al cronograma</button>
-              </div>
+            </div>
+
+            <div className={styles.modalFooter}>
+              <a 
+                href={generateGoogleCalendarUrl(selectedEvent)} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className={styles.calendarBtn}
+              >
+                <Calendar size={16} /> Agendar en Google Calendar
+              </a>
+              <button className={styles.modalCloseCta} onClick={() => setSelectedEvent(null)}>
+                Volver al cronograma
+              </button>
             </div>
           </div>
         </div>
