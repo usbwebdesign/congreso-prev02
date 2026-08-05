@@ -105,7 +105,7 @@ export default function Access() {
             <div className={styles.cardLeftBlock}>
               <span className={styles.badgeLabel}>CONGRESO 2026</span>
               <h4 className={styles.planTitle}>
-                Licenciatura
+                Entrada
               </h4>
               <p className={styles.planDescription}>
                 Pase de acceso completo para estudiantes matriculados en planes profesionales universitarios.

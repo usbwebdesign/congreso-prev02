@@ -79,10 +79,10 @@ const NavbarContent: React.FC = () => {
             <Image 
               alt="USB Online Logo" 
               className={styles.logoImage} 
-              height={40} 
+              height={36} 
+              width={144}
               priority 
               src="/images/universidadsimonbolivarlogo.webp" 
-              width={160}
             />
           </Link>
 
@@ -241,15 +241,16 @@ const NavbarContent: React.FC = () => {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Link className={styles.btnLoginPill} href="/login">
-                    <Key size={16} strokeWidth={2.2} />
-                    <span className={styles.btnText}>Iniciar Sesión</span>
-                  </Link>
+                {/* Ejemplo para invitado en acciones de cabecera */}
+                <Link className={styles.btnLoginPill} href="/login" aria-label="Iniciar Sesión">
+                  <Key size={19} strokeWidth={2} />
+                  <span className={styles.btnText}>Iniciar Sesión</span>
+                </Link>
 
-                  <button onClick={handleOpenRegisterModal} className={styles.btnAdmisiones}>
-                    <UserPlus className={styles.btnInscripcionIconMobile} size={16} strokeWidth={2.2} />
-                    <span className={styles.btnText}>Inscripción</span>
-                  </button>
+                <button onClick={handleOpenRegisterModal} className={styles.btnAdmisiones} aria-label="Inscripción">
+                  <UserPlus className={styles.btnInscripcionIconMobile} size={19} strokeWidth={2} />
+                  <span className={styles.btnText}>Inscripción</span>
+                </button>
                 </motion.div>
               )}
             </AnimatePresence>
