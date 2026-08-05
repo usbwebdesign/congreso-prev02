@@ -52,16 +52,15 @@ function ActualizarPasswordContent() {
       if (typeof window === 'undefined') return;
 
       try {
-        // Extraer parámetros del hash y limpiarlo para prevenir duplicaciones en la URL
+        // Extraer parámetros del hash y LIMPIARLO de la URL inmediatamente
         if (window.location.hash && window.location.hash.includes('access_token')) {
           const rawHash = window.location.hash.startsWith('#')
             ? window.location.hash.substring(1)
             : window.location.hash;
-          
-          // Tomar solo el primer bloque de parámetros si el hash venía duplicado
+
           const cleanHash = rawHash.split('#')[0];
           const hashParams = new URLSearchParams(cleanHash);
-          
+
           const accessToken = hashParams.get('access_token');
           const refreshToken = hashParams.get('refresh_token');
 
@@ -72,6 +71,11 @@ function ActualizarPasswordContent() {
             });
 
             if (!error && isMounted) {
+              // Limpiar el hash de la barra de direcciones de inmediato
+              if (window.history.replaceState) {
+                window.history.replaceState(null, '', window.location.pathname);
+              }
+
               setSessionValida(true);
               setCargandoSesion(false);
               return;
@@ -79,20 +83,23 @@ function ActualizarPasswordContent() {
           }
         }
 
-        // Verificar código PKCE
+        // Verificar código PKCE (?code=...) y limpiar query params
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
 
         if (code) {
           const { error } = await supabase.auth.exchangeCodeForSession(code);
           if (!error && isMounted) {
+            if (window.history.replaceState) {
+              window.history.replaceState(null, '', window.location.pathname);
+            }
             setSessionValida(true);
             setCargandoSesion(false);
             return;
           }
         }
 
-        // Verificar sesión activa existente
+        // Verificar si existe una sesión activa normal
         const { data: { session } } = await supabase.auth.getSession();
         if (session && isMounted) {
           setSessionValida(true);
@@ -128,12 +135,12 @@ function ActualizarPasswordContent() {
 
       setIsSuccess(true);
 
-      // Limpiar hash de la barra de navegación completamente
+      // Asegurar limpieza total del hash antes de salir
       if (typeof window !== 'undefined' && window.history.replaceState) {
         window.history.replaceState(null, '', window.location.pathname);
       }
 
-      // Redirección completa al Home destruyendo la pila de navegación previa
+      // Redirección completa al Home descartando la pila de navegación previa
       setTimeout(() => {
         window.location.assign('/');
       }, 1200);
