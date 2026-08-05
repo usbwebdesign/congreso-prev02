@@ -1,27 +1,17 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
-import { createBrowserClient } from '@supabase/ssr';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
 import type { User } from '@supabase/supabase-js';
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Cliente sincronizado con las Cookies de Next.js
-  const supabase = useMemo(
-    () =>
-      createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      ),
-    []
-  );
-
   useEffect(() => {
     let isMounted = true;
 
-    // 1. Suscribirse a los cambios de estado en tiempo real (Login / Logout / Invite)
+    // 1. Suscribirse a los eventos de autenticación en tiempo real
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -30,33 +20,50 @@ export function useAuth() {
       setLoading(false);
     });
 
-    // 2. Procesar tokens e inicializar la sesión
+    // 2. Inicialización completa de la sesión procesando tokens/códigos
     async function initAuth() {
       if (typeof window === 'undefined') return;
 
       try {
-        // Intercepta tokens de invitación directos (#access_token=...)
-        if (window.location.hash) {
-          const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        // A) Intercepta tokens de acceso en el Hash (#access_token=...)
+        if (window.location.hash && window.location.hash.includes('access_token')) {
+          const rawHash = window.location.hash.startsWith('#')
+            ? window.location.hash.substring(1)
+            : window.location.hash;
+
+          // Limpiar si el hash viene duplicado en la URL
+          const cleanHash = rawHash.split('#')[0];
+          const hashParams = new URLSearchParams(cleanHash);
           const accessToken = hashParams.get('access_token');
           const refreshToken = hashParams.get('refresh_token');
 
           if (accessToken && refreshToken) {
-            await supabase.auth.setSession({
+            const { data: sessionData, error } = await supabase.auth.setSession({
               access_token: accessToken,
               refresh_token: refreshToken,
             });
+
+            if (!error && sessionData.user && isMounted) {
+              setUser(sessionData.user);
+              setLoading(false);
+              return;
+            }
           }
         }
 
-        // Intercepta códigos PKCE (?code=...)
+        // B) Intercepta códigos PKCE en query params (?code=...)
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
         if (code) {
-          await supabase.auth.exchangeCodeForSession(code);
+          const { data: exchangeData, error } = await supabase.auth.exchangeCodeForSession(code);
+          if (!error && exchangeData.user && isMounted) {
+            setUser(exchangeData.user);
+            setLoading(false);
+            return;
+          }
         }
 
-        // Recuperar usuario final con la sesión lista
+        // C) Recuperar usuario actual desde cookies/sesión almacenada
         const {
           data: { user: currentUser },
         } = await supabase.auth.getUser();
@@ -66,7 +73,7 @@ export function useAuth() {
           setLoading(false);
         }
       } catch (error) {
-        console.error('Error inicializando autenticación:', error);
+        console.error('Error inicializando autenticación en useAuth:', error);
         if (isMounted) setLoading(false);
       }
     }
@@ -77,7 +84,7 @@ export function useAuth() {
       isMounted = false;
       subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, []);
 
   return { user, loading };
 }

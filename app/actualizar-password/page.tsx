@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, Suspense } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { Lock, Eye, EyeOff, KeyRound, Check, AlertCircle } from 'lucide-react';
-import { createBrowserClient } from '@supabase/ssr';
+import { supabase } from '@/lib/supabase';
 import LoginSkeleton from '../login/Skeleton';
 import s from '../login/Login.module.css';
 
@@ -18,19 +18,10 @@ function ActualizarPasswordContent() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const supabase = useMemo(
-    () =>
-      createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      ),
-    []
-  );
-
   useEffect(() => {
     let isMounted = true;
 
-    // Escuchar el evento de sesión
+    // 1. Escuchar eventos de sesión de Supabase
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
@@ -48,6 +39,7 @@ function ActualizarPasswordContent() {
       }
     });
 
+    // 2. Inicialización directa de sesión leyendo Hash / PKCE / Cookie activa
     async function inicializarSesionCompleta() {
       if (typeof window === 'undefined') return;
 
@@ -112,7 +104,7 @@ function ActualizarPasswordContent() {
       isMounted = false;
       subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -133,7 +125,7 @@ function ActualizarPasswordContent() {
         window.history.replaceState(null, '', window.location.pathname);
       }
 
-      // Redirección completa al Home destruyendo la pila de navegación previa
+      // Redirección completa al Home
       setTimeout(() => {
         window.location.assign('/');
       }, 1200);
