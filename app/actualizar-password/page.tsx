@@ -30,7 +30,7 @@ function ActualizarPasswordContent() {
   useEffect(() => {
     let isMounted = true;
 
-    // Escuchar el evento de sesión
+    // 1. Escuchar eventos de cambio en el estado de autenticación
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
@@ -48,11 +48,12 @@ function ActualizarPasswordContent() {
       }
     });
 
+    // 2. Procesar la sesión entrante desde el Hash o Query params
     async function inicializarSesionCompleta() {
       if (typeof window === 'undefined') return;
 
       try {
-        // Extraer parámetros del hash y LIMPIARLO de la URL inmediatamente
+        // A) Extraer parámetros del Hash (#access_token=...&refresh_token=...)
         if (window.location.hash && window.location.hash.includes('access_token')) {
           const rawHash = window.location.hash.startsWith('#')
             ? window.location.hash.substring(1)
@@ -65,17 +66,12 @@ function ActualizarPasswordContent() {
           const refreshToken = hashParams.get('refresh_token');
 
           if (accessToken && refreshToken) {
-            const { error } = await supabase.auth.setSession({
+            const { data, error } = await supabase.auth.setSession({
               access_token: accessToken,
               refresh_token: refreshToken,
             });
 
-            if (!error && isMounted) {
-              // Limpiar el hash de la barra de direcciones de inmediato
-              if (window.history.replaceState) {
-                window.history.replaceState(null, '', window.location.pathname);
-              }
-
+            if (!error && data?.session && isMounted) {
               setSessionValida(true);
               setCargandoSesion(false);
               return;
@@ -83,23 +79,20 @@ function ActualizarPasswordContent() {
           }
         }
 
-        // Verificar código PKCE (?code=...) y limpiar query params
+        // B) Verificar si hay código PKCE en SearchParams (?code=...)
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
 
         if (code) {
-          const { error } = await supabase.auth.exchangeCodeForSession(code);
-          if (!error && isMounted) {
-            if (window.history.replaceState) {
-              window.history.replaceState(null, '', window.location.pathname);
-            }
+          const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+          if (!error && data?.session && isMounted) {
             setSessionValida(true);
             setCargandoSesion(false);
             return;
           }
         }
 
-        // Verificar si existe una sesión activa normal
+        // C) Verificar si existe una sesión activa persistida en almacenamiento/cookies
         const { data: { session } } = await supabase.auth.getSession();
         if (session && isMounted) {
           setSessionValida(true);
@@ -107,7 +100,7 @@ function ActualizarPasswordContent() {
           return;
         }
       } catch (err) {
-        console.error('Error al inicializar la sesión:', err);
+        console.error('Error al inicializar sesión de recuperación:', err);
       } finally {
         if (isMounted) setCargandoSesion(false);
       }
@@ -133,16 +126,18 @@ function ActualizarPasswordContent() {
 
       if (updateError) throw updateError;
 
+      // Refrescar y consolidar la sesión en las cookies del cliente antes de redirigir
+      await supabase.auth.getSession();
       setIsSuccess(true);
 
-      // Asegurar limpieza total del hash antes de salir
+      // Limpiar el hash de la URL únicamente al completar la actualización
       if (typeof window !== 'undefined' && window.history.replaceState) {
         window.history.replaceState(null, '', window.location.pathname);
       }
 
-      // Redirección completa al Home descartando la pila de navegación previa
+      // Redirección completa al Home
       setTimeout(() => {
-        window.location.assign('/');
+        window.location.href = '/';
       }, 1200);
     } catch (err) {
       if (err instanceof Error) {
