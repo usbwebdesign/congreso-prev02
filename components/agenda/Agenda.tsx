@@ -21,7 +21,6 @@ export interface AgendaEvent {
   bio?: string | null;
 }
 
-// Variantes de animación para la orquestación en cascada (Staggered Effect)
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -125,15 +124,17 @@ export default function Agenda() {
     }
   };
 
-  const renderEventRow = (event: AgendaEvent, isAnimated: boolean = false) => {
+  const renderEventRow = (event: AgendaEvent) => {
     const isInteractive = !!event.description || event.type === 'conference' || event.type === 'activity';
-    const rowClass = `${styles.row} ${isAnimated ? styles.animatedRow : ''} ${isInteractive ? styles.rowInteractive : ''}`;
+    const rowClass = `${styles.row} ${isInteractive ? styles.rowInteractive : ''}`;
 
     return (
       <motion.div 
         key={event.id} 
         variants={cardVariants}
-        layout="position"
+        initial="hidden"
+        animate="visible"
+        layout
         className={rowClass}
         onClick={() => isInteractive && setSelectedEvent(event)}
       >
@@ -242,20 +243,18 @@ export default function Agenda() {
             key={`${activeDay}-${activeFaculty}`}
             variants={containerVariants}
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.05 }}
+            animate="visible"
             className={styles.timeline}
           >
             {filteredEvents.map((event, index) => {
               if (!isExpanded && index >= INITIAL_VISIBLE_COUNT) return null;
-              const isRevealedElement = index >= INITIAL_VISIBLE_COUNT;
-              return renderEventRow(event, isRevealedElement);
+              return renderEventRow(event);
             })}
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Botoneras de Expansión Integradas */}
+      {/* Botoneras de Expansión */}
       {!dbLoading && filteredEvents.length > 0 && (
         <div className={styles.expandButtonContainer}>
           {!isExpanded && hiddenEventsCount > 0 ? (
@@ -272,7 +271,7 @@ export default function Agenda() {
         </div>
       )}
 
-      {/* Ventana Emergente (Modal Reestructurado) */}
+      {/* Ventana Emergente (Modal) */}
       {selectedEvent && (
         <div className={styles.modalOverlay} onClick={() => setSelectedEvent(null)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
