@@ -30,7 +30,7 @@ function ActualizarPasswordContent() {
   useEffect(() => {
     let isMounted = true;
 
-    // 1. Escuchar eventos de cambio en el estado de autenticación
+    // Escuchar el evento de sesión
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
@@ -48,30 +48,30 @@ function ActualizarPasswordContent() {
       }
     });
 
-    // 2. Procesar la sesión entrante desde el Hash o Query params
     async function inicializarSesionCompleta() {
       if (typeof window === 'undefined') return;
 
       try {
-        // A) Extraer parámetros del Hash (#access_token=...&refresh_token=...)
+        // Extraer parámetros del hash y limpiarlo para prevenir duplicaciones en la URL
         if (window.location.hash && window.location.hash.includes('access_token')) {
           const rawHash = window.location.hash.startsWith('#')
             ? window.location.hash.substring(1)
             : window.location.hash;
-
+          
+          // Tomar solo el primer bloque de parámetros si el hash venía duplicado
           const cleanHash = rawHash.split('#')[0];
           const hashParams = new URLSearchParams(cleanHash);
-
+          
           const accessToken = hashParams.get('access_token');
           const refreshToken = hashParams.get('refresh_token');
 
           if (accessToken && refreshToken) {
-            const { data, error } = await supabase.auth.setSession({
+            const { error } = await supabase.auth.setSession({
               access_token: accessToken,
               refresh_token: refreshToken,
             });
 
-            if (!error && data?.session && isMounted) {
+            if (!error && isMounted) {
               setSessionValida(true);
               setCargandoSesion(false);
               return;
@@ -79,20 +79,20 @@ function ActualizarPasswordContent() {
           }
         }
 
-        // B) Verificar si hay código PKCE en SearchParams (?code=...)
+        // Verificar código PKCE
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
 
         if (code) {
-          const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-          if (!error && data?.session && isMounted) {
+          const { error } = await supabase.auth.exchangeCodeForSession(code);
+          if (!error && isMounted) {
             setSessionValida(true);
             setCargandoSesion(false);
             return;
           }
         }
 
-        // C) Verificar si existe una sesión activa persistida en almacenamiento/cookies
+        // Verificar sesión activa existente
         const { data: { session } } = await supabase.auth.getSession();
         if (session && isMounted) {
           setSessionValida(true);
@@ -100,7 +100,7 @@ function ActualizarPasswordContent() {
           return;
         }
       } catch (err) {
-        console.error('Error al inicializar sesión de recuperación:', err);
+        console.error('Error al inicializar la sesión:', err);
       } finally {
         if (isMounted) setCargandoSesion(false);
       }
@@ -126,18 +126,16 @@ function ActualizarPasswordContent() {
 
       if (updateError) throw updateError;
 
-      // Refrescar y consolidar la sesión en las cookies del cliente antes de redirigir
-      await supabase.auth.getSession();
       setIsSuccess(true);
 
-      // Limpiar el hash de la URL únicamente al completar la actualización
+      // Limpiar hash de la barra de navegación completamente
       if (typeof window !== 'undefined' && window.history.replaceState) {
         window.history.replaceState(null, '', window.location.pathname);
       }
 
-      // Redirección completa al Home
+      // Redirección completa al Home destruyendo la pila de navegación previa
       setTimeout(() => {
-        window.location.href = '/';
+        window.location.assign('/');
       }, 1200);
     } catch (err) {
       if (err instanceof Error) {
