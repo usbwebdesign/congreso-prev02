@@ -37,7 +37,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #0066cc; /* Azul corporativo */
+  color: #0066cc;
   font-size: 0.95rem;
   font-weight: 600;
   text-decoration: none;
@@ -123,6 +123,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
+  will-change: transform, opacity;
   animation: slideFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -134,11 +135,11 @@
   overflow: hidden;
   position: relative;
   cursor: pointer;
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  transition: border-color 0.25s ease;
+  will-change: transform, opacity;
 }
 
 .card:hover {
-  transform: translateY(-4px);
   border-color: rgba(255, 255, 255, 0.12);
 }
 
@@ -148,7 +149,6 @@
   z-index: 0;
 }
 
-/* 🖼️ Forzamos a que Next.js Image fill mantenga las proporciones reales */
 .imageWrapper img {
   object-fit: cover !important;
   object-position: center top;
@@ -160,21 +160,17 @@
   background: linear-gradient(135deg, #2b2b2b 0%, #111111 100%);
 }
 
-/* 🕶️ Capa oscura de degradado elegante para rescatar contraste */
 .cardOverlay {
   position: absolute;
   inset: 0;
   z-index: 1;
-  /* El degradado comienza a sugerirse desde el 55% y cae con más fuerza 
-     (de 0.45 a 0.95) en la zona donde reposa el texto */
   background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0) 55%,
+    rgba(0, 0, 0, 0) 50%,
     rgba(0, 0, 0, 0.45) 68%,
-    rgba(0, 0, 0, 0.85) 80%,
-    rgba(0, 0, 0, 0.95) 92%,
-    rgba(0, 0, 0, 1) 100%
+    rgba(0, 0, 0, 0.85) 82%,
+    rgba(0, 0, 0, 0.98) 100%
   );
   pointer-events: none;
 }
@@ -195,7 +191,6 @@
   margin: 0 0 6px 0;
   letter-spacing: -0.01em;
   color: #ffffff;
-  /* Sombra doble: una muy pegada para definir bordes y otra suave para dar profundidad */
   text-shadow: 
     0 1px 2px rgba(0, 0, 0, 0.6),
     0 4px 12px rgba(0, 0, 0, 0.4); 
@@ -203,7 +198,7 @@
 
 .speakerRole {
   font-size: 0.85rem;
-  color: #e4e4e7; /* Subimos a gris zinc claro para ganar contraste puro */
+  color: #e4e4e7;
   margin: 0 0 16px 0;
   line-height: 1.4;
   text-shadow: 
@@ -237,6 +232,69 @@
   border-color: #ffffff;
 }
 
+/* --- ESTILOS SKELETON CON SHIMMER --- */
+.skeletonCard {
+  background-color: #1c1c1e;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 20px;
+  height: 380px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeletonCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.03) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: speakersShimmerLoop 1.5s infinite linear;
+}
+
+.skeletonContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.skeletonName {
+  width: 70%;
+  height: 18px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.skeletonRole {
+  width: 50%;
+  height: 12px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+.skeletonSocials {
+  display: flex;
+  gap: 10px;
+}
+
+.skeletonCircle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
 /* --- INTERFAZ MODAL DETALLE --- */
 .modalOverlay {
   position: fixed;
@@ -249,7 +307,6 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  animation: fadeIn 0.2s ease-out;
 }
 
 .modalContent {
@@ -261,7 +318,6 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   position: relative;
   box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9);
-  animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .closeButton {
@@ -348,17 +404,7 @@
   background-color: #e5e5e5;
 }
 
-/* --- ANIMACIONES --- */
-@keyframes fadeIn { 
-  from { opacity: 0; } 
-  to { opacity: 1; } 
-}
-
-@keyframes scaleUp { 
-  from { transform: scale(0.95); opacity: 0; } 
-  to { transform: scale(1); opacity: 1; } 
-}
-
+/* --- ANIMACIONES KEYFRAMES --- */
 @keyframes slideFadeIn {
   from {
     opacity: 0;
@@ -370,173 +416,128 @@
   }
 }
 
-/* --- RESPONSIVE ADJUSTMENTS --- */
-@media (max-width: 1024px) {
-  .speakersGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .card { height: 340px; }
-}
-
-@media (max-width: 768px) {
-  .modalBody { 
-    padding: 32px 24px; 
-  }
-}
-
-@media (max-width: 640px) {
-  .topControlBar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-  .speakersGrid {
-    grid-template-columns: 1fr;
-  }
-  .title { font-size: 2.2rem; }
-}
-/* Remueve o comenta las animaciones nativas de CSS fadeIn y scaleUp del archivo ya que ahora se gestionan con hardware acelerado en JS, dejando únicamente la transición de paginación si se prefiere */
-
-.card {
-  background-color: #1c1c1e;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
-  height: 380px;
-  overflow: hidden;
-  position: relative;
-  cursor: pointer;
-  /* Eliminamos transform de la transición nativa para evitar que choque con Framer Motion */
-  transition: border-color 0.25s ease; 
-  will-change: transform, opacity;
-}
-
-/* Opcional: Remueve las transiciones de .modalOverlay y .modalContent ya que AnimatePresence las maneja de forma reactiva */
-.modalOverlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  z-index: 300;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
-
-.modalContent {
-  background-color: #121212;
-  width: 100%;
-  max-width: 460px;
-  border-radius: 28px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  position: relative;
-  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9);
-}
-
-.speakersGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-  /* Mantenemos la animación sutil solo cuando cambia la propiedad key por paginación */
-  animation: slideFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Placeholder Shimmer para la carga inicial limpia */
-.loadingShimmerPlaceholder {
-  height: 380px;
-  width: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.01) 25%,
-    rgba(255, 255, 255, 0.04) 50%,
-    rgba(255, 255, 255, 0.01) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.4s infinite linear;
-  border-radius: 20px;
-}
-
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-/* ==========================================================================
-   ESTILOS PREMIUM SKELETON CON SHIMMER EFECTO
-   ========================================================================== */
-.skeletonCard {
-  background-color: #1c1c1e;
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  border-radius: 20px;
-  height: 380px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  position: relative;
-  overflow: hidden;
-}
-
-/* El barrido lumínico de izquierda a derecha */
-.skeletonCard::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.03) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  background-size: 200% 100%;
-  animation: speakersShimmerLoop 1.5s infinite linear;
-}
-
-.skeletonContent {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  position: relative;
-  z-index: 2;
-}
-
-.skeletonName {
-  width: 70%;
-  height: 18px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
-}
-
-.skeletonRole {
-  width: 50%;
-  height: 12px;
-  background-color: rgba(255, 255, 255, 0.03);
-  border-radius: 4px;
-  margin-bottom: 4px;
-}
-
-.skeletonSocials {
-  display: flex;
-  gap: 10px;
-}
-
-.skeletonCircle {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.03);
-}
-
 @keyframes speakersShimmerLoop {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
 
-/* Modificación de limpieza: quitamos animaciones CSS redundantes */
-.speakersGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-  will-change: transform, opacity;
+/* ==========================================================================
+   RESPONSIVE OPTIMIZADO (MOBILE & TABLET)
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .speakersGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .card, .skeletonCard {
+    height: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sectionContainer {
+    padding: 48px 16px 80px 16px;
+  }
+
+  .header {
+    margin-bottom: 36px;
+  }
+
+  .title {
+    font-size: 2.25rem;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+  }
+
+  .modalBody { 
+    padding: 32px 20px; 
+  }
+}
+
+@media (max-width: 640px) {
+  .topControlBar {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+  }
+
+  .paginationIndicator {
+    gap: 12px;
+  }
+
+  .pageNumbers {
+    font-size: 0.85rem;
+    padding: 4px 10px;
+  }
+
+  .viewAllLink {
+    font-size: 0.85rem;
+  }
+
+  .speakersGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .card, .skeletonCard {
+    height: 280px;
+    border-radius: 16px;
+  }
+
+  .cardContent {
+    padding: 14px 12px;
+  }
+
+  .cardOverlay {
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.2) 35%,
+      rgba(0, 0, 0, 0.75) 68%,
+      rgba(0, 0, 0, 0.98) 100%
+    );
+  }
+
+  .speakerName {
+    font-size: 0.98rem;
+    margin-bottom: 2px;
+    line-height: 1.25;
+  }
+
+  .speakerRole {
+    font-size: 0.75rem;
+    margin-bottom: 8px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .iconCircle {
+    width: 24px;
+    height: 24px;
+  }
+
+  .iconCircle svg {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+@media (max-width: 380px) {
+  .speakersGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .card, .skeletonCard {
+    height: 320px;
+  }
 }
