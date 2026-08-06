@@ -41,7 +41,37 @@ const formatearVideoUrl = (url: string | null): string => {
 const StreamingSection: React.FC = () => {
   const { user, loading } = useAuth();
   const [conferencias, setConferencias] = useState<Conferencia[]>([]);
+  const [userName, setUserName] = useState<string | null>(null);
   const [fetchingData, setFetchingData] = useState(true);
+
+  // Consulta el nombre completo desde la tabla 'profiles'
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (!user) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('nombre_completo')
+          .eq('id', user.id)
+          .single();
+
+        if (error) throw error;
+        
+        if (data?.nombre_completo) {
+          // Muestra el nombre completo tal como viene en la tabla
+          setUserName(data.nombre_completo);
+          
+          // Nota: Si en algún momento prefieres mostrar solo el primer nombre, usa:
+          // setUserName(data.nombre_completo.trim().split(' ')[0]);
+        }
+      } catch (error) {
+        console.error("Error al obtener el perfil de usuario:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, [user]);
 
   useEffect(() => {
     const fetchConferencias = async () => {
@@ -134,7 +164,7 @@ const StreamingSection: React.FC = () => {
         <h2 className={styles.mainTitle}>Auditorio Virtual</h2>
         <div className={styles.accentLine} />
         <p className={styles.subtitle}>
-          Bienvenido, <span className={styles.userHighlight}>{user.email?.split('@')[0]}</span>. Como asistente registrado, tienes acceso exclusivo al catalogo multimedia del congreso.
+          Bienvenido, <span className={styles.userHighlight}>{userName || user.email?.split('@')[0]}</span>. Como asistente registrado, tienes acceso exclusivo al catalogo multimedia del congreso.
         </p>
       </div>
 
