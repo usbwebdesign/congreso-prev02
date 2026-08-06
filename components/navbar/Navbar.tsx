@@ -3,13 +3,19 @@
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { UserCircle, Key, UserPlus, CheckCircle2, Ticket, LogOut, ChevronDown } from 'lucide-react'; 
+import { UserCircle, Key, UserPlus, CheckCircle2, Ticket, LogOut, ChevronDown, Sparkles } from 'lucide-react'; 
 import { useAuth } from '@/hooks/useAuth'; 
 import { supabase } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import RegistrationModal from '../modal/RegistrationModal'; 
 import styles from './Navbar.module.css';
+
+interface ToastState {
+  show: boolean;
+  message: string;
+  type: 'logout' | 'welcome';
+}
 
 // Componente interno con la lógica que utiliza useSearchParams
 const NavbarContent: React.FC = () => {
@@ -19,15 +25,19 @@ const NavbarContent: React.FC = () => {
   
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false); 
-  const [showLogoutToast, setShowLogoutToast] = useState(false);
+  const [toast, setToast] = useState<ToastState>({ show: false, message: '', type: 'logout' });
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [firstName, setFirstName] = useState<string | null>(null);
   const { user, loading } = useAuth(); 
+  const prevUserRef = useRef<typeof user>(null);
 
   // Consulta el primer nombre del usuario desde la tabla 'profiles'
   useEffect(() => {
     const fetchUserProfile = async () => {
-      if (!user) return;
+      if (!user) {
+        setFirstName(null);
+        return;
+      }
 
       try {
         const { data, error } = await supabase
@@ -36,31 +46,39 @@ const NavbarContent: React.FC = () => {
           .eq('id', user.id)
           .single();
 
-        if (error) throw error;
+        if (error && error.code !== 'PGRST116') throw error;
 
         if (data?.nombre_completo) {
-          // Extrae únicamente el primer nombre
           const primerNombre = data.nombre_completo.trim().split(' ')[0];
           setFirstName(primerNombre);
+        } else if (user.user_metadata?.full_name) {
+          const primerNombre = user.user_metadata.full_name.trim().split(' ')[0];
+          setFirstName(primerNombre);
+        } else {
+          setFirstName(user.email?.split('@')[0] || 'Usuario');
         }
       } catch (error) {
         console.error("Error obteniendo nombre en el Navbar:", error);
+        setFirstName(user.email?.split('@')[0] || 'Usuario');
       }
     };
 
     fetchUserProfile();
   }, [user]);
 
+  // Manejo de Toast para Cierre de Sesión y Bienvenida
   useEffect(() => {
     const logoutParam = searchParams.get('logout');
+    const loginParam = searchParams.get('login');
+
     if (logoutParam === 'true') {
       const openTimer = setTimeout(() => {
-        setShowLogoutToast(true);
+        setToast({ show: true, message: 'Sesión cerrada correctamente', type: 'logout' });
         window.history.replaceState({}, '', '/');
       }, 50);
 
       const closeTimer = setTimeout(() => {
-        setShowLogoutToast(false);
+        setToast((prev) => ({ ...prev, show: false }));
       }, 3400);
 
       return () => {
@@ -68,7 +86,47 @@ const NavbarContent: React.FC = () => {
         clearTimeout(closeTimer);
       };
     }
-  }, [searchParams]);
+
+    if (loginParam === 'true' && user) {
+      const nombreMostrar = firstName || user.email?.split('@')[0] || '';
+      const openTimer = setTimeout(() => {
+        setToast({ 
+          show: true, 
+          message: `¡Bienvenido${nombreMostrar ? `, ${nombreMostrar}` : ''}!`, 
+          type: 'welcome' 
+        });
+        window.history.replaceState({}, '', window.location.pathname);
+      }, 100);
+
+      const closeTimer = setTimeout(() => {
+        setToast((prev) => ({ ...prev, show: false }));
+      }, 3800);
+
+      return () => {
+        clearTimeout(openTimer);
+        clearTimeout(closeTimer);
+      };
+    }
+  }, [searchParams, user, firstName]);
+
+  // Detecta cuando el usuario acaba de iniciar sesión directamente en la aplicación
+  useEffect(() => {
+    if (!prevUserRef.current && user && !loading && !searchParams.get('login')) {
+      const nombreMostrar = firstName || user.email?.split('@')[0] || '';
+      setToast({
+        show: true,
+        message: `¡Bienvenido${nombreMostrar ? `, ${nombreMostrar}` : ''}!`,
+        type: 'welcome'
+      });
+
+      const timer = setTimeout(() => {
+        setToast((prev) => ({ ...prev, show: false }));
+      }, 3800);
+
+      return () => clearTimeout(timer);
+    }
+    prevUserRef.current = user;
+  }, [user, loading, firstName, searchParams]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -132,14 +190,12 @@ const NavbarContent: React.FC = () => {
               </Link>
             </li>
             
-            {/* Agenda pública visible para todos */}
             <li>
               <Link className={styles.link} href="/#agenda" onClick={() => setIsMenuOpen(false)}>
                 Agenda
               </Link>
             </li>
 
-            {/* Streaming exclusivo para usuarios registrados */}
             {!loading && user && (
               <li>
                 <Link className={styles.link} href="/#conferencias" onClick={() => setIsMenuOpen(false)}>
@@ -148,7 +204,6 @@ const NavbarContent: React.FC = () => {
               </li>
             )}
 
-            {/* Acceso exclusivo para usuarios invitados */}
             {!loading && !user && (
               <li>
                 <Link className={styles.link} href="/#acceso" onClick={() => setIsMenuOpen(false)}>
@@ -157,7 +212,6 @@ const NavbarContent: React.FC = () => {
               </li>
             )}
             
-            {/* Links exclusivos dentro de la hamburguesa móvil */}
             {!loading && (
               user ? (
                 <>
@@ -191,7 +245,7 @@ const NavbarContent: React.FC = () => {
             )}
           </ul>
 
-          {/* LADO DERECHO: Acciones estructuradas */}
+          {/* LADO DERECHO: Acciones */}
           <div className={styles.actions}>
             <AnimatePresence mode="wait">
               {loading ? (
@@ -269,21 +323,19 @@ const NavbarContent: React.FC = () => {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                {/* Ejemplo para invitado en acciones de cabecera */}
-                <Link className={styles.btnLoginPill} href="/login" aria-label="Iniciar Sesión">
-                  <Key size={19} strokeWidth={2} />
-                  <span className={styles.btnText}>Iniciar Sesión</span>
-                </Link>
+                  <Link className={styles.btnLoginPill} href="/login" aria-label="Iniciar Sesión">
+                    <Key size={19} strokeWidth={2} />
+                    <span className={styles.btnText}>Iniciar Sesión</span>
+                  </Link>
 
-                <button onClick={handleOpenRegisterModal} className={styles.btnAdmisiones} aria-label="Inscripción">
-                  <UserPlus className={styles.btnInscripcionIconMobile} size={19} strokeWidth={2} />
-                  <span className={styles.btnText}>Inscripción</span>
-                </button>
+                  <button onClick={handleOpenRegisterModal} className={styles.btnAdmisiones} aria-label="Inscripción">
+                    <UserPlus className={styles.btnInscripcionIconMobile} size={19} strokeWidth={2} />
+                    <span className={styles.btnText}>Inscripción</span>
+                  </button>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Hamburguesa independiente */}
             <button className={styles.hamburger} onClick={toggleMenu} aria-label="Menú principal">
               <div className={`${styles.bar} ${isMenuOpen ? styles.bar1 : ''}`}></div>
               <div className={`${styles.bar} ${isMenuOpen ? styles.bar2 : ''}`}></div>
@@ -293,18 +345,22 @@ const NavbarContent: React.FC = () => {
         </nav>
       </header>
 
-      {/* Notificación Toast Animada */}
+      {/* Notificación Toast Animada (Bienvenida / Cierre de Sesión) */}
       <AnimatePresence>
-        {showLogoutToast && (
+        {toast.show && (
           <motion.div 
-            className={styles.toastNotification}
-            initial={{ opacity: 0, y: 20, x: '-50%' }}
-            animate={{ opacity: 1, y: 0, x: '-50%' }}
-            exit={{ opacity: 0, y: 15, x: '-50%' }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            className={`${styles.toastNotification} ${toast.type === 'welcome' ? styles.toastWelcome : ''}`}
+            initial={{ opacity: 0, y: 30, x: '-50%', scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, x: '-50%', scale: 1 }}
+            exit={{ opacity: 0, y: 20, x: '-50%', scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 350, damping: 25 }}
           >
-            <CheckCircle2 className={styles.toastIcon} size={16} />
-            <span>Sesión cerrada correctamente</span>
+            {toast.type === 'welcome' ? (
+              <Sparkles className={styles.toastIconWelcome} size={18} />
+            ) : (
+              <CheckCircle2 className={styles.toastIcon} size={18} />
+            )}
+            <span>{toast.message}</span>
           </motion.div>
         )}
       </AnimatePresence>
@@ -317,7 +373,6 @@ const NavbarContent: React.FC = () => {
   );
 };
 
-// Componente principal exportado envuelto en Suspense
 export default function Navbar() {
   return (
     <Suspense fallback={null}>
