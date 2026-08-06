@@ -21,7 +21,35 @@ const NavbarContent: React.FC = () => {
   const [isRegisterOpen, setIsRegisterOpen] = useState(false); 
   const [showLogoutToast, setShowLogoutToast] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [firstName, setFirstName] = useState<string | null>(null);
   const { user, loading } = useAuth(); 
+
+  // Consulta el primer nombre del usuario desde la tabla 'profiles'
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (!user) return;
+
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('nombre_completo')
+          .eq('id', user.id)
+          .single();
+
+        if (error) throw error;
+
+        if (data?.nombre_completo) {
+          // Extrae únicamente el primer nombre
+          const primerNombre = data.nombre_completo.trim().split(' ')[0];
+          setFirstName(primerNombre);
+        }
+      } catch (error) {
+        console.error("Error obteniendo nombre en el Navbar:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, [user]);
 
   useEffect(() => {
     const logoutParam = searchParams.get('logout');
@@ -193,7 +221,7 @@ const NavbarContent: React.FC = () => {
                       aria-label="Menú de usuario"
                     >
                       <UserCircle className={styles.avatarIcon} size={18} />
-                      <span className={styles.userEmailText}>{user.email?.split('@')[0]}</span>
+                      <span className={styles.userEmailText}>{firstName || user.email?.split('@')[0]}</span>
                       <ChevronDown size={14} className={`${styles.chevronIcon} ${isUserDropdownOpen ? styles.chevronRotate : ''}`} />
                     </button>
 
