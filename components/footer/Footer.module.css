@@ -26,28 +26,32 @@
 .logos {
   display: flex;
   align-items: center;
-  gap: 50px;
+  gap: 36px;
 }
 
-.logos a {
+.logoLink {
   display: flex;
   align-items: center;
   text-decoration: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.2s ease;
 }
 
-.logos a:hover {
-  opacity: 0.8;
+.logoLink:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
 }
 
+/* ESCALADO OPTIMIZADO PARA DESKTOP */
 .logoUsb {
-  height: 48px;
+  height: 64px;
   width: auto;
+  object-fit: contain;
 }
 
 .logoOnline {
-  height: 45px;
+  height: 52px;
   width: auto;
+  object-fit: contain;
 }
 
 .mottoContainer {
@@ -97,7 +101,7 @@
 
 /* NAVEGACIÓN */
 .nav {
-  text-align: center;
+  text-align: right;
 }
 
 .navList {
@@ -208,6 +212,14 @@
     gap: 24px;
   }
 
+  .logoUsb {
+    height: 52px;
+  }
+
+  .logoOnline {
+    height: 42px;
+  }
+
   .nav {
     text-align: center;
   }
@@ -241,7 +253,266 @@
     display: none;
   }
 }
-.logoImage {
-  height: 40px;
-  width: auto; 
+.footer {
+  color: white;
+  padding: 100px 5% 40px;
+  font-family: 'Sora', -apple-system, sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.topSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 80px;
+}
+
+/* BRANDING */
+.brandSection {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.logos {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+.logoLink:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+/* ESCALADO OPTIMIZADO PARA DESKTOP */
+.logoUsb {
+  height: 64px;
+  width: auto;
+  object-fit: contain;
+}
+
+.logoOnline {
+  height: 52px;
+  width: auto;
+  object-fit: contain;
+}
+
+.mottoContainer {
+  position: relative;
+}
+
+.motto {
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 400;
+  line-height: 1.1;
+  margin: 0;
+  color: #e0e0e0;
+}
+
+.underline {
+  width: 280px;
+  height: 4px;
+  background-color: #2b44ff;
+  margin-top: 15px;
+}
+
+/* REDES SOCIALES Y HOVER EN ICONOS */
+.socials {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  align-items: center;
+}
+
+.socials a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.socials svg {
+  width: 24px;
+  height: 24px;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.25s ease, transform 0.25s ease, filter 0.25s ease;
+}
+
+/* Hover de iconos */
+.socials a:hover {
+  transform: translateY(-2px);
+}
+
+.socials a:hover svg {
+  color: #ffffff;
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+}
+
+/* NAVEGACIÓN */
+.nav {
+  text-align: right;
+}
+
+.navList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.navList a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  transition: opacity 0.2s ease;
+}
+
+.navList a:hover {
+  opacity: 0.7;
+}
+
+/* BOTTOM SECTION */
+.bottomSection {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: center;
+}
+
+.locationRow {
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  align-items: center;
+  justify-content: center;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.2s ease;
+}
+
+.location:hover {
+  color: #ffffff;
+}
+
+.icon {
+  color: rgba(255, 255, 255, 0.6);
+  flex-shrink: 0;
+}
+
+.legalRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.separator {
+  color: rgba(255, 255, 255, 0.15);
+  font-size: 14px;
+}
+
+.privacy {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.3s ease;
+}
+
+.privacy:hover {
+  color: white;
+}
+
+.copyright {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  margin: 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .footer {
+    padding: 60px 5% 40px;
+  }
+
+  .topSection {
+    flex-direction: column;
+    gap: 50px;
+    text-align: center;
+    align-items: center;
+  }
+
+  .logos {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .logoUsb {
+    height: 52px;
+  }
+
+  .logoOnline {
+    height: 42px;
+  }
+
+  .nav {
+    text-align: center;
+  }
+
+  .motto {
+    font-size: 38px;
+  }
+
+  .underline {
+    margin: 16px auto 0;
+  }
+
+  .socials {
+    justify-content: center;
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .legalRow {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .locationRow {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .separator {
+    display: none;
+  }
 }
