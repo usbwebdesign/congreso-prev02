@@ -72,14 +72,14 @@ const DigitalBadge: React.FC<DigitalBadgeProps> = ({
 
         {/* Titular del Pase */}
         <div className={`${styles.fieldGroup || ''} ${styles.heroField || ''}`}>
-          <label className={styles.fieldLabel || ''}>ASISTENTE / ATTENDEE</label>
+          <label className={styles.fieldLabel || ''}>ASISTENTE</label>
           <h2 className={styles.passengerName || ''}>{userName}</h2>
         </div>
 
 {/* Información del Asistente (Homologada y fluida) */}
         <div className={styles.metaGrid || ''}>
           <div className={styles.fieldGroup || ''}>
-            <label className={styles.fieldLabel || ''}>ROL / PERFIL</label>
+            <label className={styles.fieldLabel || ''}>ROL</label>
             <p className={styles.metaValue || ''}>{userRole}</p>
           </div>
 
@@ -98,7 +98,7 @@ const DigitalBadge: React.FC<DigitalBadgeProps> = ({
         </div>
 
         <div className={`${styles.fieldGroup || ''} ${styles.leftAlign || ''}`}>
-          <label className={styles.fieldLabel || ''}>FECHA Y HORA / DATE & TIME</label>
+          <label className={styles.fieldLabel || ''}>FECHA Y HORA</label>
           <p className={`${styles.metaValue || ''} ${styles.dateHighlight || ''}`}>
             20 y 21 OCT <span className={styles.timeLabel}>• 8:00 AM</span>
           </p>

@@ -145,9 +145,9 @@ export default function PasePage() {
           transition={{ ease: [0.2, 0, 0, 1], duration: 0.4, delay: 0.1 }}
         >
           <span className={s.badgeTag}>ACCESO CONFIRMADO</span>
-          <h1 className={s.pageTitle}>Tu Credencial Digital</h1>
+          <h1 className={s.pageTitle}>Tu Pase Digital</h1>
           <p className={s.pageSubtitle}>
-            Presenta esta credencial desde tu dispositivo móvil al ingresar a los espacios del evento.
+            Presenta este pase desde tu dispositivo móvil al ingresar a los espacios del evento.
           </p>
         </motion.div>
 
