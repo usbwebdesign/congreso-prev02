@@ -1,48 +1,75 @@
 .directoryContainer {
   color: #ffffff;
   width: 100%;
-  max-width: 1400px; /* Ancho completo */
+  max-width: 1400px;
   margin-top: 100px !important;
   margin: 0 auto;
   padding: 60px 4% 120px 4%;
 }
 
-/* --- BARRA DE FILTROS SEGMENTADA (STYLE APPLE) --- */
-.filterWrapper {
+/* --- FILTROS DE ÁREA (ESTILO CÁPSULA / PILL) --- */
+.filterContainer {
   display: flex;
+  flex-direction: column;
+  gap: 14px;
   margin-bottom: 40px;
 }
 
-.segmentedControl {
-  background-color: #121212;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 4px;
-  border-radius: 12px;
+.filterLabelRow {
   display: flex;
-  gap: 4px;
-  flex-wrap: wrap; /* Permite que los botones bajen ordenadamente en pantallas reducidas */
-}
-
-.filterButton {
-  background: none;
-  border: none;
+  align-items: center;
+  gap: 8px;
   color: #71717a;
-  padding: 8px 24px;
-  font-size: 0.9rem;
+}
+
+.filterIcon {
+  color: #71717a;
+}
+
+.filterLabel {
+  font-size: 0.8rem;
   font-weight: 600;
-  border-radius: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pillsWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none; /* Firefox */
+}
+
+.pillsWrapper::-webkit-scrollbar {
+  display: none; /* Chrome / Safari */
+}
+
+.pillButton {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #a1a1aa;
+  padding: 10px 22px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 9999px;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.filterButton:hover {
+.pillButton:hover {
+  border-color: rgba(255, 255, 255, 0.3);
   color: #ffffff;
 }
 
-.filterActive {
-  background-color: rgba(255, 255, 255, 0.06);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+.pillActive {
+  background-color: #ffffff !important;
+  border-color: #ffffff !important;
+  color: #09090b !important;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.15);
 }
 
 /* --- COMPONENTE DE FILAS REGULARES --- */
@@ -52,13 +79,11 @@
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Hover sutil */
 .rowWrapper:hover:not(.rowExpanded) {
   background-color: rgba(255, 255, 255, 0.015);
   border-bottom-color: rgba(255, 255, 255, 0.12);
 }
 
-/* Fila activa con tu degradado corregido (100%) */
 .rowExpanded {
   background: linear-gradient(
     90deg, 
@@ -67,12 +92,12 @@
     transparent 100%
   );
   border-bottom-color: rgba(37, 99, 235, 0.15); 
-  box-shadow: inset 1px 0px 0px 0px rgba(37, 99, 235, 0.2); /* Línea acento vertical milimétrica */
+  box-shadow: inset 1px 0px 0px 0px rgba(37, 99, 235, 0.2);
 }
 
 /* --- ENCABEZADO --- */
 .header {
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 }
 
 .titleRow {
@@ -122,7 +147,7 @@
   width: 80px;
   height: 80px;
   position: relative;
-  border-radius: 4px; /* Forma rectangular impecable */
+  border-radius: 4px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -153,7 +178,7 @@
 
 .speakerRole {
   font-size: 0.95rem;
-  color: #ffffff; /* Texto blanco para el cargo */
+  color: #ffffff;
   margin: 0;
 }
 
@@ -166,7 +191,7 @@
   color: #ffffff;
 }
 
-/* --- ACORDEÓN DESPLEGABLE INTEGRADO NATIVO --- */
+/* --- ACORDEÓN DESPLEGABLE INTEGRADO --- */
 .dropdownContent {
   display: grid;
   grid-template-rows: 0fr;
@@ -197,24 +222,24 @@
   margin: 0;
 }
 
-/* --- SECCIÓN DE ACCIONES CON BOTONES GLOW (COLUMNAS SIMÉTRICAS) --- */
+/* --- SECCIÓN DE ACCIONES --- */
 .actionsCol {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  width: 180px; /* Ancho fijo para forzar la alineación y simetría exacta */
+  width: 180px;
 }
 
 .actionItem {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Empuja el texto a la izq y el icono a la der */
+  justify-content: space-between;
   width: 100%;
 }
 
 .actionLabel {
   font-size: 0.9rem;
-  color: #71717a; /* Color gris suave neutral */
+  color: #71717a;
   font-weight: 500;
 }
 
@@ -235,9 +260,9 @@
 
 .iconBox:hover {
   color: #ffffff;
-  border-color: rgba(37, 99, 235, 0.4); /* Tu azul de identidad */
+  border-color: rgba(37, 99, 235, 0.4);
   background: linear-gradient(180deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.02) 100%);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1); /* Glow exterior discreto */
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
   transform: translateY(-1px);
 }
 
@@ -305,7 +330,7 @@
   cursor: not-allowed;
 }
 
-/* --- AJUSTES RESPONSIVOS --- */
+/* --- RESPONSIVE --- */
 @media (max-width: 900px) {
   .mainRow {
     flex-direction: column;
@@ -347,11 +372,81 @@
     flex-direction: row;
     justify-content: flex-start;
     gap: 20px;
-    width: 100%; /* Reseteo para móvil */
+    width: 100%;
   }
 
   .actionItem {
     width: auto;
     gap: 8px;
+  }
+}
+/* --- AJUSTES RESPONSIVOS DEL TÍTULO Y CONTENIDO --- */
+@media (max-width: 900px) {
+  .title {
+    font-size: 1.75rem; /* Ajuste fluido para tablets y móviles */
+  }
+
+  .titleRow {
+    gap: 12px;
+  }
+
+  .mainRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 0;
+  }
+  
+  .profileMeta {
+    gap: 12px;
+  }
+  
+  .avatarWrapper {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .speakerName {
+    font-size: 1.3rem;
+  }
+  
+  .roleAndControl {
+    width: 100%;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  
+  .dropdownInner {
+    padding: 0 0 24px 0; 
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .bioText {
+    font-size: 0.95rem;
+  }
+  
+  .actionsCol {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .actionItem {
+    width: auto;
+    gap: 8px;
+  }
+}
+
+/* Teléfonos pequeños (iPhone SE / dispositivos de 360px-400px) */
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.45rem;
+  }
+
+  .iconWrapper svg {
+    width: 20px;
+    height: 20px;
   }
 }

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { ChevronDown, ChevronLeft, ChevronRight, User } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, User, Filter } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import s from './SpeakersDirectory.module.css';
 
@@ -26,11 +26,11 @@ interface Speaker {
 
 type FacultyFilter = 'Todos' | FacultyType;
 
-const FACULTY_LABELS: Record<FacultyFilter, string> = {
-  'Todos': 'Todos',
-  'Ciencias Humanas': 'Ciencias Humanas (FCH)',
-  'Ciencia y Tecnología': 'Ciencia y Tecnología (FCYT)',
-  'Ciencias Económico Administrativas y Negocios': 'Económico Administrativas y Negocios (FCEAN)'
+const FACULTY_SHORT_LABELS: Record<FacultyFilter, string> = {
+  'Todos': 'Todo el Congreso',
+  'Ciencias Humanas': 'FCH',
+  'Ciencias Económico Administrativas y Negocios': 'FCEAN',
+  'Ciencia y Tecnología': 'FCYT'
 };
 
 export default function SpeakersDirectory() {
@@ -69,8 +69,8 @@ export default function SpeakersDirectory() {
   const filterOptions: FacultyFilter[] = [
     'Todos', 
     'Ciencias Humanas', 
-    'Ciencia y Tecnología', 
-    'Ciencias Económico Administrativas y Negocios'
+    'Ciencias Económico Administrativas y Negocios',
+    'Ciencia y Tecnología'
   ];
 
   return (
@@ -85,20 +85,24 @@ export default function SpeakersDirectory() {
         </div>
       </div>
 
-      {/* Segmented Control */}
-      <div className={s.filterWrapper}>
-        <div className={s.segmentedControl}>
+      {/* Filtros tipo Cápsula / Pill (Estilo Imagen) */}
+      <div className={s.filterContainer}>
+        <div className={s.filterLabelRow}>
+          <Filter size={14} className={s.filterIcon} />
+          <span className={s.filterLabel}>FILTRAR POR ÁREA:</span>
+        </div>
+        <div className={s.pillsWrapper}>
           {filterOptions.map((option) => (
             <button
               key={option}
-              className={`${s.filterButton} ${activeFilter === option ? s.filterActive : ''}`}
+              className={`${s.pillButton} ${activeFilter === option ? s.pillActive : ''}`}
               onClick={() => {
                 setActiveFilter(option);
                 setExpandedSpeakerId(null);
                 setCurrentPage(1);
               }}
             >
-              {FACULTY_LABELS[option]}
+              {FACULTY_SHORT_LABELS[option]}
             </button>
           ))}
         </div>
@@ -151,7 +155,6 @@ export default function SpeakersDirectory() {
                   <div className={s.dropdownInner}>
                     <p className={s.bioText}>{speaker.bio}</p>
                     
-                    {/* Nueva sección de redes sociales alineada */}
                     <div className={s.actionsCol}>
                       {speaker.linkedin_url && (
                         <div className={s.actionItem}>
