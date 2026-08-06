@@ -83,7 +83,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background-color: #0f62fe; /* Azul IBM */
+  background-color: #0f62fe;
   color: #ffffff;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   padding: 0.6rem 1.6rem;
@@ -104,7 +104,7 @@
 }
 
 .btnInscripcionIconMobile {
-  display: none; /* Oculto en desktop */
+  display: none;
 }
 
 .btnLoginPill {
@@ -290,29 +290,63 @@
 }
 
 /* ==========================================================================
-   TOAST NOTIFICATION & CONTROLES HAMBURGUESA
+   TOAST NOTIFICATION (CENTRADA Y AJUSTADA CONTRA DESBORDAMIENTO)
    ========================================================================== */
 .toastNotification {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  background: rgba(17, 20, 26, 0.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 0.8rem 1.4rem;
-  border-radius: 20px;
+  background: rgba(18, 20, 26, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.85rem 1.6rem;
+  border-radius: 50px;
   color: #ffffff;
-  font-family: 'Sora', sans-serif;
-  font-size: 0.85rem;
+  font-family: 'Sora', -apple-system, sans-serif;
+  font-size: 0.88rem;
   font-weight: 500;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
   z-index: 9999;
+  width: auto;
+  max-width: calc(100vw - 32px); /* Margen de seguridad de 16px por lado */
+  box-sizing: border-box;
 }
 
-.toastIcon { color: #3b82f6; flex-shrink: 0; }
+.toastNotification span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  text-align: center;
+}
+
+.toastWelcome {
+  background: rgba(15, 23, 42, 0.94);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(15, 98, 254, 0.2);
+}
+
+.toastIcon { 
+  color: #3b82f6; 
+  flex-shrink: 0; 
+}
+
+.toastIconWelcome {
+  color: #60a5fa;
+  flex-shrink: 0;
+  animation: pulseWelcome 2s infinite ease-in-out;
+}
+
+@keyframes pulseWelcome {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.15); opacity: 0.85; }
+}
 
 .hamburger {
   display: none;
@@ -403,7 +437,6 @@
     display: none; 
   }
 
-  /* BOTONES EN MÓVIL (CÍRCULOS PERFECTOS DE 40PX) */
   .btnLoginPill,
   .btnAdmisiones,
   .btnPaseDirectoMobile {
@@ -466,7 +499,6 @@
     box-shadow: 0 0 8px #00bc70;
   }
 
-  /* BOTÓN HAMBURGUESA FRACTAL Y ELEGANTE */
   .hamburger { 
     display: flex; 
     order: 3; 
@@ -485,7 +517,6 @@
     display: none;
   }
 
-  /* DESPLEGABLE MÓVIL (HAMBURGUESA ABIERTA) */
   .mobileOnly {
     display: block;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -545,7 +576,15 @@
   .bar2 { opacity: 0; }
   .bar3 { transform: rotate(45deg) translate(-4px, -5px); }
 
-  /* SKELETON RESPONSIVO */
+  .toastNotification {
+    bottom: 20px;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.82rem;
+    gap: 8px;
+    border-radius: 40px;
+    max-width: calc(100vw - 24px);
+  }
+
   .actionsSkeleton {
     gap: 0.5rem;
   }
@@ -567,66 +606,4 @@
   .link { font-size: 0.88rem; white-space: nowrap; }
   .logoImage { height: 32px; }
   .actions { gap: 0.8rem; }
-}
-/* ==========================================================================
-   TOAST NOTIFICATION (CENTRADA EN MOBILE & DESKTOP)
-   ========================================================================== */
-.toastNotification {
-  position: fixed;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(18, 20, 26, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 0.85rem 1.6rem;
-  border-radius: 50px;
-  color: #ffffff;
-  font-family: 'Sora', -apple-system, sans-serif;
-  font-size: 0.88rem;
-  font-weight: 500;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
-  z-index: 9999;
-  white-space: nowrap;
-  max-width: 90vw;
-}
-
-/* Toast de Bienvenida personalizado */
-.toastWelcome {
-  background: rgba(15, 23, 42, 0.94);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(15, 98, 254, 0.2);
-}
-
-.toastIcon { 
-  color: #3b82f6; 
-  flex-shrink: 0; 
-}
-
-.toastIconWelcome {
-  color: #60a5fa;
-  flex-shrink: 0;
-  animation: pulseWelcome 2s infinite ease-in-out;
-}
-
-@keyframes pulseWelcome {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.15); opacity: 0.85; }
-}
-
-/* ==========================================================================
-   AJUSTES RESPONSIVOS MÓVIL
-   ========================================================================== */
-@media (max-width: 768px) {
-  .toastNotification {
-    bottom: 20px;
-    padding: 0.75rem 1.25rem;
-    font-size: 0.82rem;
-    gap: 8px;
-    border-radius: 40px;
-  }
 }
