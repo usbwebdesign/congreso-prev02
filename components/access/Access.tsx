@@ -11,11 +11,12 @@ interface Benefit {
 }
 
 const licenciaturaBenefits: Benefit[] = [
-  { label: 'Acceso Total:', description: 'Entrada a todas las conferencias magistrales, paneles y dinámicas en vivo.' },
-  { label: 'Kit del Congreso:', description: 'Material pop premium, bolso oficial de la edición 2026 y acreditación física.' },
-  { label: 'Coffee Break & Networking:', description: 'Espacios dedicados para conectar directamente con ponentes y empresas líderes.' },
-  { label: 'Certificación Oficial:', description: 'Documento impreso con valor curricular avalado por la Universidad Simón Bolívar.' },
-  { label: 'Plataforma Post-Evento:', description: 'Acceso exclusivo a las grabaciones en HD para repasar las charlas después.' }
+  { label: 'Acceso Total:', description: 'Eentrada a las conferencias magistrales, paneles y actividades del evento.' },
+  { label: 'Kit del Congreso:', description: 'material pop premium, bolso oficial de la edición 2026 y artículos promocionales.' },
+  { label: 'Coffee Break & Networking:', description: 'espacios dedicados para conectar directamente con ponentes y empresas líderes.' },
+  { label: 'Banquete:', description: 'comida de gala para celebrar el 45 Aniversario de la Universidad. ' },
+  { label: 'Certificación Oficial:', description: 'documento digital con valor curricular avalado por la Universidad Simón Bolívar.' },
+  { label: 'Plataforma Post-Evento:', description: 'acceso exclusivo a las grabaciones de las actividades grabadas durante el Congreso.' }
 ];
 
 // VARIANTES DE ANIMACIÓN TIPADAS CORRECTAMENTE PARA EVITAR ERRORES DE COMPILACIÓN
