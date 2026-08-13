@@ -99,7 +99,7 @@ const HistoryTimeline: React.FC = () => {
         <motion.div className={styles.header} variants={itemVariants}>
           <h2 className={styles.title}>Nuestra Trayectoria Académica</h2>
           <p className={styles.subtitle}>
-            Dos décadas impulsando el conocimiento multidisciplinario y la evolución de nuestra comunidad universitaria.
+            Mas de 4 décadas impulsando el conocimiento multidisciplinario y la evolución de nuestra comunidad universitaria.
           </p>
         </motion.div>
 
