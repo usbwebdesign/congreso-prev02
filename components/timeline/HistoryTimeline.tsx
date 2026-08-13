@@ -16,28 +16,28 @@ interface Milestone {
 const MILESTONES: Milestone[] = [
   {
     year: "2006",
-    title: "1ER CONGRESO MULTIDISCIPLINARIO",
+    title: "Primera Edición del CONGRESO MULTIDISCIPLINARIO",
     description: "Un espacio para compartir conocimiento y celebrar 25 años de formación académica a nivel institucional.",
     cardImage: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=80",
     bgImage: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80"
   },
   {
     year: "2011",
-    title: "2DO CONGRESO MULTIDISCIPLINARIO",
+    title: "Segunda Edición del CONGRESO MULTIDISCIPLINARIO",
     description: "Un encuentro para reflexionar sobre los desafíos que enfrentan los universitarios en México y su papel en la sociedad.",
     cardImage: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=600&q=80",
     bgImage: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80"
   },
   {
     year: "2016",
-    title: "3ER CONGRESO MULTIDISCIPLINARIO",
+    title: "Tercera Edición del CONGRESO MULTIDISCIPLINARIO",
     description: "Un llamado a la responsibility social, analizando retos actuales y las perspectivas para un futuro más consciente.",
     cardImage: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=600&q=80",
     bgImage: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1200&q=80"
   },
   {
     year: "2021",
-    title: "4TO CONGRESO MULTIDISCIPLINARIO",
+    title: "Cuarta Edición del CONGRESO MULTIDISCIPLINARIO",
     description: "Una reflexión sobre el impacto del COVID-19 y cómo la transformación e innovación social redefinieron nuestra realidad. (Primera edición en línea)",
     cardImage: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=80",
     bgImage: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80"

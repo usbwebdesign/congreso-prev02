@@ -85,10 +85,9 @@ export default function Features() {
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as const }}
       >
         <h2 className={styles.title}>¿Qué encontrarás en este evento?</h2>
-        <h3 className={styles.subtitle}>Una nueva forma de conectar</h3>
+        <h3 className={styles.subtitle}>Innovación para Transformar</h3>
         <p className={styles.description}>
-          Una experiencia integral que combina las últimas tendencias globales 
-          con el aprendizaje práctico de la mano de expertos de la industria.
+          Una experiencia para generar un espacio de encuentro y reflexión que permita a la comunidad universitaria actuar con liderazgo hacia el futuro desde el humanismo, la innovación y la responsabilidad social, promoviendo el diálogo interdisciplinar, la conciencia ética y el compromiso activo de los participantes como agentes de cambio en contextos de transformación tecnológica, social y ambiental, en el marco del 45 aniversario de la Universidad Simón Bolívar México.
         </p>
       </motion.div>
 
@@ -192,7 +191,7 @@ export default function Features() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
                 >
-                  Entendido
+                  Aceptar
                 </motion.button>
               </motion.div>
             </motion.div>
