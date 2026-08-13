@@ -109,7 +109,7 @@ export default function Access() {
                 Entrada
               </h4>
               <p className={styles.planDescription}>
-                Pase de acceso completo para estudiantes matriculados en planes profesionales universitarios.
+                Pase de acceso completo para la comunidad USBMéxico.
               </p>
               
               <button 
