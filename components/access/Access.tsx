@@ -11,7 +11,7 @@ interface Benefit {
 }
 
 const licenciaturaBenefits: Benefit[] = [
-  { label: 'Acceso Total:', description: 'Eentrada a las conferencias magistrales, paneles y actividades del evento.' },
+  { label: 'Acceso Total:', description: 'entrada a las conferencias magistrales, paneles y actividades del evento.' },
   { label: 'Kit del Congreso:', description: 'material pop premium, bolso oficial de la edición 2026 y artículos promocionales.' },
   { label: 'Coffee Break & Networking:', description: 'espacios dedicados para conectar directamente con ponentes y empresas líderes.' },
   { label: 'Banquete:', description: 'comida de gala para celebrar el 45 Aniversario de la Universidad. ' },

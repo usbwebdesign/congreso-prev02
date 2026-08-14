@@ -124,7 +124,7 @@ export default function RegistrationModal({ isOpen, onClose }: RegistrationModal
             {/* TARJETA DE RESUMEN Y JERARQUÍA */}
             <div className={s.pricingHeaderCard}>
               <div className={s.categoryBadgeWrapper}>
-                <span className={s.categoryBadge}>Estudiantes</span>
+                <span className={s.categoryBadge}>Cuota de Participación</span>
               </div>
               <div className={s.priceRow}>
                 <span className={s.totalLabel}>Inversión Total del Congreso</span>
