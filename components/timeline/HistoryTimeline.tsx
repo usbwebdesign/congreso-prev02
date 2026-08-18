@@ -25,8 +25,8 @@ const MILESTONES: Milestone[] = [
     year: "2011",
     title: "Segunda Edición del Congreso Multidisciplinario",
     description: "Un encuentro para reflexionar sobre los desafíos que enfrentan los universitarios en México y su papel en la sociedad.",
-    cardImage: "https://judkuvuykoztdsnnmekl.supabase.co/storage/v1/object/public/speakers/segundocongreso_2011_480x480%20(1).png",
-    bgImage: "https://judkuvuykoztdsnnmekl.supabase.co/storage/v1/object/public/speakers/segundocongreso_2011_1920x1080.png"
+    cardImage: "https://judkuvuykoztdsnnmekl.supabase.co/storage/v1/object/public/speakers/IMG_6013.webp",
+    bgImage: "https://judkuvuykoztdsnnmekl.supabase.co/storage/v1/object/public/speakers/IMG_5944.webp"
   },
   {
     year: "2016",
