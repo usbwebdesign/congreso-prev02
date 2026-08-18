@@ -33,7 +33,7 @@ const MILESTONES: Milestone[] = [
     title: "Tercera Edición del Congreso Multidisciplinario",
     description: "Un llamado a la responsibility social, analizando retos actuales y las perspectivas para un futuro más consciente.",
     cardImage: "https://judkuvuykoztdsnnmekl.supabase.co/storage/v1/object/public/speakers/segundocongreso_2011_480x480%20(1).png",
-    bgImage: "https://judkuvuykoztdsnnmekl.supabase.co/storage/v1/object/public/speakers/IMG_0457%20(1)%20(1).webp"
+    bgImage: "https://judkuvuykoztdsnnmekl.supabase.co/storage/v1/object/public/speakers/segundocongreso_2011_1920x1080.png"
   },
   {
     year: "2021",
