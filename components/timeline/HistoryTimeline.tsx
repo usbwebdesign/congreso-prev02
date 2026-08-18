@@ -18,7 +18,7 @@ const MILESTONES: Milestone[] = [
     year: "2006",
     title: "Primera Edición del Congreso Multidisciplinario",
     description: "Un espacio para compartir conocimiento y celebrar 25 años de formación académica a nivel institucional.",
-    cardImage: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=80",
+    cardImage: "https://judkuvuykoztdsnnmekl.supabase.co/storage/v1/object/public/speakers/primercongreso_2006_480x480.png",
     bgImage: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80"
   },
   {
