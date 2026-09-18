@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { QRCodeSVG } from 'qrcode.react'; // 1. Importar la librería de QR
 import styles from './DigitalBadge.module.css';
 
 export interface DigitalBadgeProps {
@@ -20,6 +21,9 @@ const DigitalBadge: React.FC<DigitalBadgeProps> = ({
 }) => {
   
   const materialEase = [0.2, 0, 0, 1] as const; 
+
+  // Generamos el texto dinámico que leerá el escáner
+  const qrData = `Nombre: ${userName} | Correo: ${userEmail}`;
 
   return (
     <motion.div 
@@ -76,7 +80,7 @@ const DigitalBadge: React.FC<DigitalBadgeProps> = ({
           <h2 className={styles.passengerName || ''}>{userName}</h2>
         </div>
 
-{/* Información del Asistente (Homologada y fluida) */}
+        {/* Información del Asistente */}
         <div className={styles.metaGrid || ''}>
           <div className={styles.fieldGroup || ''}>
             <label className={styles.fieldLabel || ''}>ROL</label>
@@ -102,6 +106,16 @@ const DigitalBadge: React.FC<DigitalBadgeProps> = ({
           <p className={`${styles.metaValue || ''} ${styles.dateHighlight || ''}`}>
             20 y 21 OCT <span className={styles.timeLabel}>• 8:00 AM</span>
           </p>
+        </div>
+
+        {/* 2. Código QR Dinámico Insertado */}
+        <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
+          <QRCodeSVG 
+            value={qrData} 
+            size={140}
+            level="H"
+            includeMargin={true}
+          />
         </div>
       </div>
 
