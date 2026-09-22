@@ -9,6 +9,7 @@ import DigitalBadge from '@/components/badge/DigitalBadge';
 import s from './pase.module.css';
 
 interface UserProfile {
+  id?: string;
   nombre_completo?: string;
   facultad?: string;
   rol?: string;
@@ -27,7 +28,7 @@ export default function PasePage() {
   const [fetchingProfile, setFetchingProfile] = useState(false);
 
   useEffect(() => {
-    // 1. Si la autenticación ya terminó y NO hay usuario, salir al inicio
+    // 1. Verificación de autenticación
     if (!authLoading && !user) {
       router.push('/');
       return;
@@ -45,9 +46,9 @@ export default function PasePage() {
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('nombre_completo, facultad, rol')
+          .select('id, nombre_completo, facultad, rol')
           .eq('id', user.id)
-          .maybeSingle(); // Cambiado de .single() a .maybeSingle() para evitar crash si no existe fila
+          .maybeSingle();
 
         if (error) {
           console.warn('Advertencia al consultar perfil:', error.message);
@@ -104,10 +105,9 @@ export default function PasePage() {
     );
   }
 
-  // Si después de cargar no hay usuario autenticado
   if (!user) return null;
 
-  // Resolución de variables con fallbacks impecables
+  // Resolución de variables con fallbacks 
   const nombre = profile?.nombre_completo || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Asistente';
   const rol = profile?.rol || user.user_metadata?.rol || 'Asistente';
   const facultad = profile?.facultad || user.user_metadata?.facultad || 'Universidad Simón Bolívar';
@@ -154,6 +154,7 @@ export default function PasePage() {
         <div className={s.badgeZone}>
           <DigitalBadge 
             key={user.id}
+            userId={user.id}
             userName={nombre} 
             userEmail={user.email || ''} 
             userRole={rol}
