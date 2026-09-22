@@ -1,12 +1,13 @@
-"use client";
+'use client';
 
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { QRCodeSVG } from 'qrcode.react'; // 1. Importar la librería de QR
+import { QRCodeSVG } from 'qrcode.react'; 
 import styles from './DigitalBadge.module.css';
 
 export interface DigitalBadgeProps {
+  userId?: string; // UUID de Supabase
   userName?: string;
   userEmail?: string;
   userRole?: string;
@@ -14,16 +15,16 @@ export interface DigitalBadgeProps {
 }
 
 const DigitalBadge: React.FC<DigitalBadgeProps> = ({ 
-  userName = "José Antonio Limón Navarro", 
-  userEmail = "j.limon@usb.edu.mx",
+  userId,
+  userName = "Asistente", 
+  userEmail = "asistente@usb.edu.mx",
   userRole = "Asistente",
   userFaculty = "Universidad Simón Bolívar"
 }) => {
-  
   const materialEase = [0.2, 0, 0, 1] as const; 
 
-  // Generamos el texto dinámico que leerá el escáner
-  const qrData = `Nombre: ${userName} | Correo: ${userEmail}`;
+  // Garantizar que el QR reciba el UUID del usuario o un fallback si aún está cargando
+  const qrData = userId && userId !== 'undefined' && userId.trim() !== '' ? userId : 'CARGANDO-UUID';
 
   return (
     <motion.div 
@@ -108,14 +109,30 @@ const DigitalBadge: React.FC<DigitalBadgeProps> = ({
           </p>
         </div>
 
-        {/* 2. Código QR Dinámico Insertado */}
-        <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
-          <QRCodeSVG 
-            value={qrData} 
-            size={140}
-            level="H"
-            includeMargin={true}
-          />
+        {/* Código QR con el UUID de Supabase */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '20px 0' }}>
+          {qrData !== 'CARGANDO-UUID' ? (
+            <QRCodeSVG 
+              value={qrData} 
+              size={150}
+              level="H"
+              includeMargin={true}
+            />
+          ) : (
+            <div style={{
+              width: 150,
+              height: 150,
+              border: '2px dashed #ccc',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#888',
+              fontSize: '0.8rem'
+            }}>
+              Cargando QR...
+            </div>
+          )}
         </div>
       </div>
 
@@ -132,7 +149,7 @@ const DigitalBadge: React.FC<DigitalBadgeProps> = ({
           <span>Palacio Le Crillon</span>
         </div>
         <div className={styles.securityCode || ''}>
-          PASS ID: USB-2026
+          PASS ID: {userId && userId !== 'undefined' ? userId.slice(0, 8).toUpperCase() : 'USB-2026'}
         </div>
       </div>
     </motion.div>
