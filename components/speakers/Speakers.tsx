@@ -118,10 +118,7 @@ export default function Speakers() {
           <span className={s.pageNumbers}>
             {loading ? '...' : `${currentPage} de ${totalPages || 1}`}
           </span>
-          <Link href="/ponentes" className={s.viewAllLink}>
-            Ver todos los ponentes
-            <ArrowUpRight size={16} className={s.arrowIcon} />
-          </Link>
+        
         </div>
 
         <div className={s.arrowControls}>
