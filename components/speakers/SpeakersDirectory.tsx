@@ -143,7 +143,7 @@ export default function SpeakersDirectory() {
                   </div>
 
                   <div className={s.roleAndControl}>
-                    <p className={s.speakerRole}>{speaker.role}, {speaker.company}</p>
+                    <p className={s.speakerRole}>{speaker.role} {speaker.company}</p>
                     <div className={`${s.chevronWrapper} ${isExpanded ? s.chevronActive : ''}`}>
                       <ChevronDown size={28} strokeWidth={1.5} />
                     </div>
