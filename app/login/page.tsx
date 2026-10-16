@@ -45,19 +45,20 @@ function LoginPage() {
     const cleanPassword = password.trim();
 
     try {
-      // 1. Buscamos primero el perfil precargado en la tabla 'perfiles' por correo
+      // 1. Buscamos primero el perfil precargado en la tabla 'profiles' (en inglés) por correo
       const { data: perfilExistente } = await supabase
-        .from('perfiles')
+        .from('profiles')
         .select('*')
         .ilike('email', cleanEmail)
         .maybeSingle();
 
       if (isRegisterMode) {
         // MODO ACTIVACIÓN DE CUENTA (CREAR CONTRASEÑA POR PRIMERA VEZ)
-        const fullName = perfilExistente?.nombre_completo || perfilExistente?.nombre || cleanEmail.split('@')[0];
+        const fullName = perfilExistente?.nombre_completo || cleanEmail.split('@')[0];
         const userRole = perfilExistente?.rol || 'Alumno';
         const userFaculty = perfilExistente?.facultad || perfilExistente?.institucion || 'FCH';
         const userInstitution = perfilExistente?.institucion || 'USB';
+        const userSala = perfilExistente?.sala || '';
 
         const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
           email: cleanEmail,
@@ -69,6 +70,7 @@ function LoginPage() {
               rol: userRole,
               facultad: userFaculty,
               institucion: userInstitution,
+              sala: userSala,
             }
           }
         });
@@ -81,7 +83,7 @@ function LoginPage() {
           });
 
           if (signInData?.user) {
-            // Actualizamos metadatos por si faltaban
+            // Actualizamos metadatos
             await supabase.auth.updateUser({
               data: {
                 full_name: fullName,
@@ -89,6 +91,7 @@ function LoginPage() {
                 rol: userRole,
                 facultad: userFaculty,
                 institucion: userInstitution,
+                sala: userSala,
               }
             });
 
@@ -129,15 +132,16 @@ function LoginPage() {
         }
 
         if (data?.user) {
-          // Si existe perfil precargado, nos aseguramos de mantener sincronizados los metadatos
+          // Si existe perfil precargado, mantenemos sincronizados los metadatos en Auth
           if (perfilExistente) {
             await supabase.auth.updateUser({
               data: {
-                full_name: perfilExistente.nombre_completo || perfilExistente.nombre,
-                nombre_completo: perfilExistente.nombre_completo || perfilExistente.nombre,
+                full_name: perfilExistente.nombre_completo,
+                nombre_completo: perfilExistente.nombre_completo,
                 rol: perfilExistente.rol || 'Alumno',
                 facultad: perfilExistente.facultad || perfilExistente.institucion || 'FCH',
                 institucion: perfilExistente.institucion || 'USB',
+                sala: perfilExistente.sala || '',
               }
             });
           }
