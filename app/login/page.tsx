@@ -2,13 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Mail, Lock, Eye, EyeOff, ArrowLeft, LogIn, Check } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowLeft, LogIn, Check, UserPlus } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import LoginSkeleton from './Skeleton';
 import s from './Login.module.css';
 
-export default function LoginPage() {
+function LoginPage() {
   const router = useRouter();
+  const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -16,7 +17,6 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
   
-  // Estado para la micro-interacción de éxito
   const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
@@ -36,36 +36,135 @@ export default function LoginPage() {
     checkSession();
   }, [router]);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
     setSubmitting(true);
 
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPassword = password.trim();
+
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      // 1. Buscamos primero el perfil precargado en la tabla 'perfiles' por correo
+      const { data: perfilExistente } = await supabase
+        .from('perfiles')
+        .select('*')
+        .ilike('email', cleanEmail)
+        .maybeSingle();
 
-      if (error) throw error;
+      if (isRegisterMode) {
+        // MODO ACTIVACIÓN DE CUENTA (CREAR CONTRASEÑA POR PRIMERA VEZ)
+        const fullName = perfilExistente?.nombre_completo || perfilExistente?.nombre || cleanEmail.split('@')[0];
+        const userRole = perfilExistente?.rol || 'Alumno';
+        const userFaculty = perfilExistente?.facultad || perfilExistente?.institucion || 'FCH';
+        const userInstitution = perfilExistente?.institucion || 'USB';
 
-      if (data.user) {
-        // En lugar de redireccionar inmediato, disparamos la recompensa visual
-        setIsSuccess(true);
-        
-        // Esperamos a que termine la animación antes de cambiar de ruta
-        setTimeout(() => {
-          router.push('/');
-          router.refresh();
-        }, 1200); 
-      }
-    } catch (err) {
-      if (err instanceof Error) {
-        setErrorMsg(err.message);
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email: cleanEmail,
+          password: cleanPassword,
+          options: {
+            data: {
+              full_name: fullName,
+              nombre_completo: fullName,
+              rol: userRole,
+              facultad: userFaculty,
+              institucion: userInstitution,
+            }
+          }
+        });
+
+        // Si la cuenta ya existía previamente en auth.users
+        if (signUpError && signUpError.message.includes('User already registered')) {
+          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+            email: cleanEmail,
+            password: cleanPassword,
+          });
+
+          if (signInData?.user) {
+            // Actualizamos metadatos por si faltaban
+            await supabase.auth.updateUser({
+              data: {
+                full_name: fullName,
+                nombre_completo: fullName,
+                rol: userRole,
+                facultad: userFaculty,
+                institucion: userInstitution,
+              }
+            });
+
+            setIsSuccess(true);
+            setTimeout(() => {
+              router.push('/');
+              router.refresh();
+            }, 1200);
+            return;
+          }
+
+          setErrorMsg('Tu correo ya ha sido activado previamente. Intenta iniciar sesión con tu contraseña.');
+          setSubmitting(false);
+          return;
+        }
+
+        if (signUpError) {
+          throw new Error(signUpError.message);
+        }
+
+        if (signUpData?.user) {
+          setIsSuccess(true);
+          setTimeout(() => {
+            router.push('/');
+            router.refresh();
+          }, 1200);
+        }
+
       } else {
-        setErrorMsg('Ocurrió un error inesperado al iniciar sesión');
+        // INICIO DE SESIÓN TRADICIONAL
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: cleanEmail,
+          password: cleanPassword,
+        });
+
+        if (error) {
+          throw new Error(error.message);
+        }
+
+        if (data?.user) {
+          // Si existe perfil precargado, nos aseguramos de mantener sincronizados los metadatos
+          if (perfilExistente) {
+            await supabase.auth.updateUser({
+              data: {
+                full_name: perfilExistente.nombre_completo || perfilExistente.nombre,
+                nombre_completo: perfilExistente.nombre_completo || perfilExistente.nombre,
+                rol: perfilExistente.rol || 'Alumno',
+                facultad: perfilExistente.facultad || perfilExistente.institucion || 'FCH',
+                institucion: perfilExistente.institucion || 'USB',
+              }
+            });
+          }
+
+          setIsSuccess(true);
+          setTimeout(() => {
+            router.push('/');
+            router.refresh();
+          }, 1200);
+        }
       }
-      setSubmitting(false); // Solo apagamos si hay error, si es exitoso se queda en loading/success
+    } catch (err: any) {
+      let cleanMessage = 'Ocurrió un error al procesar la solicitud.';
+
+      if (typeof err === 'string') {
+        cleanMessage = err;
+      } else if (err && typeof err === 'object' && typeof err.message === 'string') {
+        cleanMessage = err.message;
+      }
+
+      if (cleanMessage.includes('Invalid login credentials')) {
+        setErrorMsg('Correo electrónico o contraseña incorrectos.');
+      } else {
+        setErrorMsg(cleanMessage);
+      }
+
+      setSubmitting(false);
     }
   };
 
@@ -82,16 +181,16 @@ export default function LoginPage() {
       {pageLoading ? (
         <LoginSkeleton />
       ) : isSuccess ? (
-        /* ==================== VISTA DE ÉXITO (UX REWARD) ==================== */
         <div className={s.successWrapper}>
           <div className={s.successCircle}>
             <Check size={28} strokeWidth={3} className={s.checkIcon} />
           </div>
-          <h3 className={s.successTitle}>¡Acceso Concedido!</h3>
+          <h3 className={s.successTitle}>
+            {isRegisterMode ? '¡Cuenta Activada!' : '¡Acceso Concedido!'}
+          </h3>
           <p className={s.successSubtitle}>Redireccionando al panel principal...</p>
         </div>
       ) : (
-        /* ==================== FORMULARIO TRADICIONAL ==================== */
         <div className={s.loginContentWrapper}>
           <button 
             type="button" 
@@ -106,18 +205,30 @@ export default function LoginPage() {
           <div className={s.brandHeader}>
             <div className={s.brandLogoWrapper}>
               <div className={s.brandLogo}>
-                <LogIn size={22} strokeWidth={1.8} className={s.loginIcon} />
+                {isRegisterMode ? (
+                  <UserPlus size={22} strokeWidth={1.8} className={s.loginIcon} />
+                ) : (
+                  <LogIn size={22} strokeWidth={1.8} className={s.loginIcon} />
+                )}
               </div>
             </div>
-            <h2 className={s.title}>Inicia Sesión</h2>
+            <h2 className={s.title}>
+              {isRegisterMode ? 'Activar Cuenta' : 'Inicia Sesión'}
+            </h2>
             <p className={s.subtitle}>
-              Ingresa tus credenciales para acceder a la plataforma del V Congreso.
+              {isRegisterMode 
+                ? 'Ingresa tu correo pre-registrado y define tu nueva contraseña.' 
+                : 'Ingresa tus credenciales para acceder a la plataforma del V Congreso.'}
             </p>
           </div>
 
-          {errorMsg && <div className={s.errorAlert}>{errorMsg}</div>}
+          {errorMsg && (
+            <div className={s.errorAlert}>
+              {String(errorMsg)}
+            </div>
+          )}
 
-          <form onSubmit={handleLogin} className={s.form}>
+          <form onSubmit={handleSubmit} className={s.form}>
             <div className={s.inputWrapper}>
               <Mail className={s.inputIcon} size={18} />
               <input 
@@ -135,7 +246,7 @@ export default function LoginPage() {
               <Lock className={s.inputIcon} size={18} />
               <input 
                 type={showPassword ? 'text' : 'password'} 
-                placeholder="contraseña" 
+                placeholder={isRegisterMode ? "crea tu contraseña" : "contraseña"} 
                 className={s.input}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -153,11 +264,40 @@ export default function LoginPage() {
             </div>
 
             <button type="submit" className={s.submitBtn} disabled={submitting}>
-              {submitting ? 'Verificando...' : 'Ingresar'}
+              {submitting 
+                ? 'Procesando...' 
+                : isRegisterMode 
+                  ? 'Activar Cuenta y Entrar' 
+                  : 'Ingresar'}
             </button>
           </form>
+
+          <div style={{ textAlign: 'center', marginTop: '16px' }}>
+            <button
+              type="button"
+              onClick={() => {
+                setIsRegisterMode(!isRegisterMode);
+                setErrorMsg(null);
+              }}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#0f62fe',
+                fontSize: '14px',
+                cursor: 'pointer',
+                textDecoration: 'underline'
+              }}
+            >
+              {isRegisterMode 
+                ? '¿Ya activaste tu contraseña? Inicia sesión aquí' 
+                : '¿Es tu primera vez? Activa tu cuenta y crea tu contraseña'}
+            </button>
+          </div>
+
         </div>
       )}
     </div>
   );
 }
+
+export default LoginPage;
