@@ -13,6 +13,7 @@ interface UserProfile {
   nombre_completo?: string;
   facultad?: string;
   rol?: string;
+  institucion?: string;
 }
 
 // Cliente Supabase fuera del render
@@ -37,21 +38,22 @@ export default function PasePage() {
     let isMounted = true;
 
     async function getProfileData() {
-      if (!user) {
+      if (!user?.email) {
         if (isMounted) setFetchingProfile(false);
         return;
       }
       
       setFetchingProfile(true);
       try {
+        // CORRECCIÓN CLAVE: Buscamos en la tabla profiles por EMAIL (no por ID)
         const { data, error } = await supabase
           .from('profiles')
-          .select('id, nombre_completo, facultad, rol')
-          .eq('id', user.id)
+          .select('id, nombre_completo, facultad, institucion, rol')
+          .ilike('email', user.email.trim())
           .maybeSingle();
 
         if (error) {
-          console.warn('Advertencia al consultar perfil:', error.message);
+          console.warn('Advertencia al consultar perfil por email:', error.message);
         }
 
         if (data && isMounted) {
@@ -107,10 +109,10 @@ export default function PasePage() {
 
   if (!user) return null;
 
-  // Resolución de variables con fallbacks 
+  // Resolución de variables con la prioridad correcta desde la tabla profiles
   const nombre = profile?.nombre_completo || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Asistente';
   const rol = profile?.rol || user.user_metadata?.rol || 'Asistente';
-  const facultad = profile?.facultad || user.user_metadata?.facultad || 'Universidad Simón Bolívar';
+  const facultad = profile?.facultad || profile?.institucion || user.user_metadata?.facultad || 'Universidad Simón Bolívar';
 
   return (
     <div className={s.pageWrapper}>
@@ -154,7 +156,7 @@ export default function PasePage() {
         <div className={s.badgeZone}>
           <DigitalBadge 
             key={user.id}
-            userId={user.id}
+            userId={profile?.id || user.id}
             userName={nombre} 
             userEmail={user.email || ''} 
             userRole={rol}
