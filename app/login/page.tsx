@@ -297,7 +297,7 @@ function LoginPage() {
             >
               {isRegisterMode 
                 ? '¿Ya activaste tu contraseña? Inicia sesión aquí' 
-                : '¿Es tu primera vez? Activa tu cuenta y crea tu contraseña'}
+                : 'Registrate aquí'}
             </button>
           </div>
 
