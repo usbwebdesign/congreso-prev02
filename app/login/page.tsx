@@ -284,12 +284,15 @@ function LoginPage() {
                 setErrorMsg(null);
               }}
               style={{
-                background: 'none',
+                background: '#E81352',
                 border: 'none',
-                color: '#0f62fe',
+                color: 'white',
                 fontSize: '14px',
                 cursor: 'pointer',
-                textDecoration: 'underline'
+                borderRadius: '13px',
+                padding: '10px',
+                textDecoration: 'none'
+                
               }}
             >
               {isRegisterMode 
