@@ -22,12 +22,20 @@ function LoginPage() {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
+        // Valida la sesión directamente con el servidor de Supabase
+        const { data: { user }, error } = await supabase.auth.getUser();
+
+        if (user && !error) {
+          // Si la sesión es válida y el usuario existe en el servidor, redirige
           router.push('/');
+        } else {
+          // Si el usuario fue borrado en la BD o el token ya no es válido,
+          // se limpia la sesión local para desbloquear la pantalla de login
+          await supabase.auth.signOut();
         }
       } catch (err) {
         console.error('Error inicializando auth:', err);
+        await supabase.auth.signOut();
       } finally {
         setPageLoading(false);
       }
@@ -45,7 +53,7 @@ function LoginPage() {
     const cleanPassword = password.trim();
 
     try {
-      // 1. Buscamos primero el perfil precargado en la tabla 'profiles' (en inglés) por correo
+      // 1. Buscamos el perfil precargado en la tabla 'profiles' por correo
       const { data: perfilExistente } = await supabase
         .from('profiles')
         .select('*')
@@ -292,12 +300,11 @@ function LoginPage() {
                 borderRadius: '13px',
                 padding: '10px',
                 textDecoration: 'none'
-                
               }}
             >
               {isRegisterMode 
                 ? '¿Ya activaste tu contraseña? Inicia sesión aquí' 
-                : 'Registrate aquí'}
+                : '¿Es tu primera vez? Activa tu cuenta y crea tu contraseña'}
             </button>
           </div>
 
