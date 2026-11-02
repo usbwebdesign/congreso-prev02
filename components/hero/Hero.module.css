@@ -156,6 +156,34 @@
   transform: scale(0.96);
 }
 
+.ctaButtonPDF {
+  background-color: red; 
+  color: #ffffff;
+  box-shadow: 0 10px 25px rgba(29, 78, 216, 0.3);
+  border: none;
+  font-weight: 700;
+  text-decoration: none; 
+  display: inline-block; 
+  cursor: pointer;
+  border-radius: 9999px;
+  transition: background-color 0.25s ease, transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 0; 
+
+  font-size: clamp(0.95rem, 2dvh, 1.05rem);
+  padding: clamp(12px, 1.8dvh, 15px) clamp(44px, 5dvh, 56px);
+}
+
+.ctaButtonPDF:hover {
+  background-color: #FFFFFF;
+  color: red;
+  transform: translateY(-1px);
+}
+
+/* Efecto háptico premium al presionar */
+.ctaButtonPDF:active {
+  transform: scale(0.96);
+}
+
 @keyframes bounce {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
